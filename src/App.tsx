@@ -1,8 +1,10 @@
+import Audio from "./components/Audio"
+
 function App() {
 
   return (
     <>
-      <h1 className="text-3xl text-pink-500">Vite + React + Tailwind</h1>
+      <Audio />
     </>
   )
 }
