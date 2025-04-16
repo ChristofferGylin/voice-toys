@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import * as Tone from "tone"
 
 const Audio = () => {
@@ -11,41 +11,49 @@ const Audio = () => {
     const recordedChunks = useRef<Blob[]>([])
     const [audioUrl, setAudioUrl] = useState<string | null>(null)
 
+    useEffect(() => {
+        mic.current = new Tone.UserMedia()
+        pitchShifter.current = new Tone.PitchShift(-3)
+        phaser.current = new Tone.Phaser({
+            frequency: 40,
+            octaves: 1,
+            baseFrequency: 100
+        })
+        gate.current = new Tone.Gate(-35, 0.2)
+
+        mic.current.connect(gate.current)
+        gate.current.connect(pitchShifter.current)
+        pitchShifter.current.connect(phaser.current)
+        phaser.current.toDestination()
+
+        const raw = Tone.getContext().rawContext as AudioContext
+        const dest = raw.createMediaStreamDestination()
+        phaser.current.connect(dest)
+
+        mediaRecorder.current = new MediaRecorder(dest.stream)
+
+        mediaRecorder.current.ondataavailable = (e) => {
+            if (e.data.size > 0) recordedChunks.current.push(e.data)
+        }
+
+        mediaRecorder.current.onstop = () => {
+            const blob = new Blob(recordedChunks.current, {type: "audio/webm"})
+            const url = URL.createObjectURL(blob)
+            setAudioUrl(url)
+        }
+    }, [])
+
     const onStartMic = async () => {
 
         try {
-            await Tone.start()
-            mic.current = new Tone.UserMedia()
-            pitchShifter.current = new Tone.PitchShift(-3)
-            phaser.current = new Tone.Phaser({
-                frequency: 40,
-                octaves: 1,
-                baseFrequency: 100
-            })
-            gate.current = new Tone.Gate(-35, 0.2)
 
-            await mic.current.open()
+            const toneContext = Tone.getContext()
 
-            mic.current.connect(gate.current)
-            gate.current.connect(pitchShifter.current)
-            pitchShifter.current.connect(phaser.current)
-            phaser.current.toDestination()
-
-            const raw = Tone.getContext().rawContext as AudioContext
-            const dest = raw.createMediaStreamDestination()
-            phaser.current.connect(dest)
-
-            mediaRecorder.current = new MediaRecorder(dest.stream)
-
-            mediaRecorder.current.ondataavailable = (e) => {
-                if (e.data.size > 0) recordedChunks.current.push(e.data)
+            if (toneContext.state !== 'running') {
+                await Tone.start()
             }
-
-            mediaRecorder.current.onstop = () => {
-                const blob = new Blob(recordedChunks.current, {type: "audio/webm"})
-                const url = URL.createObjectURL(blob)
-                setAudioUrl(url)
-            }
+            
+            await mic.current?.open() 
 
             console.log("Microphone is open")
         } catch (err) {
