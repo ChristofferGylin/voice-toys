@@ -1,4 +1,5 @@
-import { AutoFilter, AutoPanner, AutoWah, BitCrusher, Chebyshev, Chorus, Distortion, FeedbackDelay, Freeverb, FrequencyShifter, JCReverb, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
+import { AutoFilter, AutoPanner, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
+import { CompressorSettings, EQ3Settings, FilterSettings, GateSettings, LimiterSettings } from "./Component";
 
 export type ToneFx = (
     AutoFilter |
@@ -18,7 +19,12 @@ export type ToneFx = (
     Freeverb |
     Phaser |
     Reverb |
-    Vibrato
+    Vibrato |
+    Filter |
+    Gate |
+    Compressor |
+    Limiter |
+    EQ3
 )
 
 
@@ -42,7 +48,12 @@ export type StateFx = {
         FreeverbSettings |
         PhaserSettings |
         ReverbSettings |
-        VibratoSettings
+        VibratoSettings |
+        FilterSettings |
+        GateSettings |
+        CompressorSettings |
+        LimiterSettings |
+        EQ3Settings
     );
 }
 
