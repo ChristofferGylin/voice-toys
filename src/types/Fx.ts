@@ -20,3 +20,11 @@ export type ToneFx = (
     Reverb |
     Vibrato
 )
+
+export type AutoFilterSettings = {
+    depth: number;
+    frequency: number;
+    wet: number;
+    baseFrequency: number;
+    octaves: number;
+}
