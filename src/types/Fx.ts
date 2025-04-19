@@ -21,10 +21,24 @@ export type ToneFx = (
     Vibrato
 )
 
+
+export type StateFx = {
+    name: string;
+    settings: (
+        AutoFilterSettings | 
+        BitCrusherSettings
+    );
+}
+
 export type AutoFilterSettings = {
     depth: number;
     frequency: number;
     wet: number;
     baseFrequency: number;
     octaves: number;
+}
+
+export type  BitCrusherSettings = {
+    bits: number;
+    wet: number;
 }
