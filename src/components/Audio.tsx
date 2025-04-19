@@ -1,46 +1,66 @@
 import { useEffect, useRef, useState } from "react"
 import * as Tone from "tone"
+import { StateFx, ToneFx } from "../types/Fx"
 
 const Audio = () => {
-    const mic = useRef<Tone.UserMedia | null>(null)
-    const pitchShifter = useRef<Tone.PitchShift | null>(null)
-    const phaser = useRef<Tone.Phaser | null>(null)
-    const gate = useRef<Tone.Gate | null>(null)
+    const [stateFx, setStateFx] = useState<(StateFx | null)[]>(Array(6).fill(null))
 
-    const mediaRecorder = useRef<MediaRecorder | null>(null)
-    const recordedChunks = useRef<Blob[]>([])
+    const toneFx = useRef<(ToneFx | null)[]>(Array(6).fill(null))
+
+    const mic = useRef<Tone.UserMedia | null>(null)
+    const micGain = useRef<Tone.Gain | null>(null)
+    const inputGain = useRef<Tone.Gain | null>(null)
+    const outputGain = useRef<Tone.Gain | null>(null)
+    const masterVolume = useRef<Tone.Volume | null>(null)
+    const samplePlayer = useRef<Tone.Player | null>(null)
+    const inputMediaRecorder = useRef<MediaRecorder | null>(null)
+    const inputRecordedChunks = useRef<Blob[]>([])
+    const outputMediaRecorder = useRef<MediaRecorder | null>(null)
+    const outputRecordedChunks = useRef<Blob[]>([])
     const [audioUrl, setAudioUrl] = useState<string | null>(null)
 
     useEffect(() => {
         mic.current = new Tone.UserMedia()
-        pitchShifter.current = new Tone.PitchShift(-3)
-        phaser.current = new Tone.Phaser({
-            frequency: 40,
-            octaves: 1,
-            baseFrequency: 100
-        })
-        gate.current = new Tone.Gate(-35, 0.2)
+        micGain.current = new Tone.Gain(1)
+        inputGain.current = new Tone.Gain(1)
+        outputGain.current = new Tone.Gain(1)
+        masterVolume.current = new Tone.Volume(0)
+        samplePlayer.current = new Tone.Player()
+        
+        mic.current.connect(micGain.current)
+        micGain.current.connect(inputGain.current)
+        samplePlayer.current.connect(inputGain.current)
+        inputGain.current.connect(outputGain.current)
+        outputGain.current.connect(masterVolume.current)
+        masterVolume.current.toDestination()
 
-        mic.current.connect(gate.current)
-        gate.current.connect(pitchShifter.current)
-        pitchShifter.current.connect(phaser.current)
-        phaser.current.toDestination()
+        const setUpRecoder = (input: Tone.Gain, mediaRecorderRef: React.RefObject<MediaRecorder | null>, recordedChunks: React.RefObject<Blob[]>, setUrl?: (url: string) => void) => {
+            const raw = Tone.getContext().rawContext as AudioContext
+            const dest = raw.createMediaStreamDestination()
+            input.connect(dest)
 
-        const raw = Tone.getContext().rawContext as AudioContext
-        const dest = raw.createMediaStreamDestination()
-        phaser.current.connect(dest)
+            mediaRecorderRef.current = new MediaRecorder(dest.stream)
 
-        mediaRecorder.current = new MediaRecorder(dest.stream)
-
-        mediaRecorder.current.ondataavailable = (e) => {
+            mediaRecorderRef.current.ondataavailable = (e) => {
             if (e.data.size > 0) recordedChunks.current.push(e.data)
+            }
+
+            mediaRecorderRef.current.onstop = () => {
+                const blob = new Blob(recordedChunks.current, {type: "audio/webm"})
+                const url = URL.createObjectURL(blob)
+                
+                
+                if (setUrl) {
+                    setUrl(url)
+                } else {
+                    samplePlayer.current?.load(url)
+                }
+            }
         }
 
-        mediaRecorder.current.onstop = () => {
-            const blob = new Blob(recordedChunks.current, {type: "audio/webm"})
-            const url = URL.createObjectURL(blob)
-            setAudioUrl(url)
-        }
+        setUpRecoder(micGain.current, inputMediaRecorder, inputRecordedChunks)
+        setUpRecoder(outputGain.current, outputMediaRecorder, outputRecordedChunks, (url) => {setAudioUrl(url)})
+
     }, [])
 
     const onStartMic = async () => {
@@ -76,12 +96,12 @@ const Audio = () => {
     }
 
     const onStartRecord = () => {
-        recordedChunks.current = []
-        mediaRecorder.current?.start()
+        inputRecordedChunks.current = []
+        inputMediaRecorder.current?.start()
     }
 
     const onStopRecord = () => {
-        mediaRecorder.current?.stop()
+        inputMediaRecorder.current?.stop()
     }
 
     return (
