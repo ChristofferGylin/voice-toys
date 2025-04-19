@@ -26,7 +26,11 @@ export type StateFx = {
     name: string;
     settings: (
         AutoFilterSettings | 
-        BitCrusherSettings
+        BitCrusherSettings |
+        DistortionSettings |
+        FrequencyShifterSettings |
+        PingPongDelaySettings |
+        StereoWidenerSettings
     );
 }
 
@@ -40,5 +44,25 @@ export type AutoFilterSettings = {
 
 export type  BitCrusherSettings = {
     bits: number;
+    wet: number;
+}
+
+export type DistortionSettings = {
+    wet: number;
+}
+
+export type FrequencyShifterSettings = {
+    wet: number;
+    frequency: number;
+}
+
+export type PingPongDelaySettings = {
+    feedback: number;
+    wet: number;
+    delayTime: number;
+}
+
+export type StereoWidenerSettings = {
+    width: number;
     wet: number;
 }
