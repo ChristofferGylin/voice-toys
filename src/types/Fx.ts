@@ -30,7 +30,13 @@ export type StateFx = {
         DistortionSettings |
         FrequencyShifterSettings |
         PingPongDelaySettings |
-        StereoWidenerSettings
+        StereoWidenerSettings |
+        AutoPannerSettings |
+        ChebyshevSettings |
+        FeedbackDelaySettings |
+        JCReverbSettings |
+        PitchShiftSettings |
+        TremoloSettings
     );
 }
 
@@ -65,4 +71,37 @@ export type PingPongDelaySettings = {
 export type StereoWidenerSettings = {
     width: number;
     wet: number;
+}
+
+export type AutoPannerSettings = {
+    depth: number;
+    frequency: number;
+    wet: number;
+}
+
+export type ChebyshevSettings = {
+    wet: number;
+}
+
+export type FeedbackDelaySettings = {
+    feedback: number;
+    wet: number;
+    delayTime: number;
+}
+
+export type JCReverbSettings = {
+    wet: number;
+    roomSize: number;
+}
+
+export type PitchShiftSettings = {
+    feedback: number;
+    wet: number;
+    delayTime: number;
+}
+
+export type TremoloSettings = {
+    frequency: number;
+    wet: number;
+    depth: number;
 }
