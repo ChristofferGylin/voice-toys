@@ -99,6 +99,21 @@ const Audio = () => {
         
     }
 
+    const toggleMuteMic = () => {
+        setMuteInput((oldValue) => {
+            if (!micGain.current) return oldValue
+            const newValue = !oldValue
+
+            if (newValue) {
+                micGain.current.gain.value = 0
+            } else {
+                micGain.current.gain.value = micGainValue
+            }
+
+            return newValue
+        })
+    }
+
     const onStartRecord = () => {
         inputRecordedChunks.current = []
         inputMediaRecorder.current?.start()
@@ -110,18 +125,16 @@ const Audio = () => {
 
     const onExport = () => {
 
-        if (!masterVolume.current || !micGain.current) return
+        if (!masterVolume.current || !micGain.current || !samplePlayer.current) return
         
         masterVolume.current.mute = true
         micGain.current.gain.value = 0
+        samplePlayer.current.stop()
+        samplePlayer.current.set({loop: false})
 
         outputRecordedChunks.current = []
         outputMediaRecorder.current?.start()
 
-        if (!samplePlayer.current) return
-
-        samplePlayer.current.stop()
-        samplePlayer.current.set({loop: false})
         samplePlayer.current.start()
         samplePlayer.current.onstop = () => {
 
@@ -139,6 +152,7 @@ const Audio = () => {
         <div>
             <button onClick={onStartMic} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Open Microphone</button>
             <button onClick={onCloseMic} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Close Microphone</button>
+            <button onClick={toggleMuteMic} className={`m-2 border rounded-lg hover:bg-gray-400 ${muteInput ? 'bg-red-500' : 'bg-gray-500'}`}>Mute Microphone</button>
             <button onClick={onStartRecord} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Start Recording</button>
             <button onClick={onStopRecord} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Stop Recording</button>
             <button onClick={onExport} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Export</button>
