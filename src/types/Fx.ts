@@ -36,7 +36,13 @@ export type StateFx = {
         FeedbackDelaySettings |
         JCReverbSettings |
         PitchShiftSettings |
-        TremoloSettings
+        TremoloSettings |
+        AutoWahSettings |
+        ChorusSettings |
+        FreeverbSettings |
+        PhaserSettings |
+        ReverbSettings |
+        VibratoSettings
     );
 }
 
@@ -101,6 +107,39 @@ export type PitchShiftSettings = {
 }
 
 export type TremoloSettings = {
+    frequency: number;
+    wet: number;
+    depth: number;
+}
+
+export type AutoWahSettings = {
+    Q: number;
+    gain: number;
+    wet: number;
+}
+
+export type ChorusSettings = {
+    frequency: number;
+    wet: number;
+    feedback: number;
+}
+
+export type FreeverbSettings = {
+    wet: number;
+    roomSize: number;
+}
+
+export type PhaserSettings = {
+    Q: number;
+    frequency: number;
+    wet: number;
+}
+
+export type ReverbSettings = {
+    wet: number;
+}
+
+export type VibratoSettings = {
     frequency: number;
     wet: number;
     depth: number;
