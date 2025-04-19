@@ -1,15 +1,25 @@
 import { StateFx } from "../types/Fx"
+import { FaPlusCircle, FaArrowRight } from "react-icons/fa";
 
-const FxItem = ({fx}: {fx: StateFx | null}) => {
+const FxItem = ({fx, index}: {fx: StateFx | null, index: number}) => {
+
+    const style = "flex justify-center items-center aspect-square h-full border rounded-lg text-4xl"
+    const arrowStyle = "text-5xl text-slate-500 last:hidden"
     
     if (!fx) {
         return (
-            <div className="flex justify-center items-center aspect-square h-full border rounded-lg text-4xl text-slate-700 border-slate-500 bg-slate-400">X</div>
+            <>
+                <button className={`${style} text-slate-500 hover:text-slate-600 border-slate-500 bg-slate-100 border-dashed text-5xl`}><FaPlusCircle /></button>
+                <FaArrowRight className={arrowStyle}/>
+            </>
         )
     }
 
     return (
-        <div className="aspect-square h-full border rounded-lg text-4xl text-green-700 border-green-500 bg-green-400">{fx.name}</div>
+        <>
+            <button className={`${style} text-green-700 border-green-500 bg-green-400`}>{fx.name}</button>
+            <FaArrowRight className={arrowStyle}/>
+        </>
     )
     
     
