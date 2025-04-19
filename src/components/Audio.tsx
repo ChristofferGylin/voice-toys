@@ -18,6 +18,10 @@ const Audio = () => {
     const outputMediaRecorder = useRef<MediaRecorder | null>(null)
     const outputRecordedChunks = useRef<Blob[]>([])
     const [audioUrl, setAudioUrl] = useState<string | null>(null)
+    const [loop, setLoop] = useState(false)
+    const [muteInput, setMuteInput] = useState(false)
+    const [muteOutput, setMuteOutput] = useState(false)
+    const [micGainValue, setMicGainValue] = useState(1)
 
     useEffect(() => {
         mic.current = new Tone.UserMedia()
@@ -104,15 +108,42 @@ const Audio = () => {
         inputMediaRecorder.current?.stop()
     }
 
+    const onExport = () => {
+
+        if (!masterVolume.current || !micGain.current) return
+        
+        masterVolume.current.mute = true
+        micGain.current.gain.value = 0
+
+        outputRecordedChunks.current = []
+        outputMediaRecorder.current?.start()
+
+        if (!samplePlayer.current) return
+
+        samplePlayer.current.stop()
+        samplePlayer.current.set({loop: false})
+        samplePlayer.current.start()
+        samplePlayer.current.onstop = () => {
+
+            if (!masterVolume.current || !micGain.current) return
+
+            masterVolume.current.mute = muteOutput
+            micGain.current.gain.value = micGainValue
+            outputMediaRecorder.current?.stop()
+
+        }
+        
+    }
+
     return (
         <div>
             <button onClick={onStartMic} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Open Microphone</button>
             <button onClick={onCloseMic} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Close Microphone</button>
             <button onClick={onStartRecord} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Start Recording</button>
             <button onClick={onStopRecord} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Stop Recording</button>
+            <button onClick={onExport} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Export</button>
             {audioUrl && (
                 <div className="mt-4">
-                    <audio controls src={audioUrl} />
                     <a href={audioUrl} download="recording.webm">Download recording</a>
                 </div>
             )}
