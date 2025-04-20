@@ -24,6 +24,7 @@ export type FilterSettings = {
 
 export type GateSettings = {
     threshold: number;
+    smoothing: number;
 }
 
 export type LimiterSettings = {
