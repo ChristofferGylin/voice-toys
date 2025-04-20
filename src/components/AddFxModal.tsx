@@ -5,7 +5,7 @@ import addFxList from "../data/addFxList"
 
 const AddFxModal = ({index, closeModal}: {index: number, closeModal: () => void} ) => {
 
-    const { toneFxSetter, stateFxSetter } = useFxContext()
+    const { toneFxSetter, stateFxSetter, connectFx, disconnectFx } = useFxContext()
 
     const modalRef = useRef<HTMLDivElement | null>(null)
 
@@ -31,8 +31,10 @@ const AddFxModal = ({index, closeModal}: {index: number, closeModal: () => void}
                 <div>
                     {addFxList.map((fx, listIndex) => {
                         return <AddFxItem key={`${fx.name}#${listIndex}`} fx={fx} callback={(toneFx, stateFx) => {
+                            disconnectFx()
                             toneFxSetter(index, toneFx)
                             stateFxSetter(index, stateFx)
+                            connectFx()
                             closeModal()
                         }} />
                     })}
