@@ -1,4 +1,4 @@
-import { AutoFilter, AutoPanner, AutoWah, BitCrusher, Chebyshev, Chorus, Distortion, FeedbackDelay, Freeverb, FrequencyShifter, JCReverb, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
+import { AutoFilter, AutoPanner, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
 import { type AddFxType } from "../types/Fx";
 
 const addFxList: AddFxType[] = [
@@ -84,12 +84,48 @@ const addFxList: AddFxType[] = [
         }}),
     },
     {
+        name: 'Compressor',
+        description: 'Compressor is a thin wrapper around the Web Audio DynamicsCompressorNode. Compression reduces the volume of loud sounds or amplifies quiet sounds by narrowing or "compressing" an audio signals dynamic range.',
+        createToneFx: () => (new Compressor({
+            attack: 0.1,
+            threshold: -30,
+            knee: 1,
+            ratio: 3,
+            release: 0.5,
+        })),
+        createStateFx: () => ({name: 'Compressor', settings: {
+            attack: 0.1,
+            threshold: -30,
+            knee: 1,
+            ratio: 3,
+            release: 0.5,
+        }}),
+    },
+    {
         name: 'Distortion',
         description: 'A simple distortion effect using Tone.WaveShaper.',
         createToneFx: () => (new Distortion({wet: 0.5, distortion: 0.8})),
         createStateFx: () => ({name: 'Distortion', settings: {
             wet: 0.5,
             distortion: 0.8,
+        }}),
+    },
+    {
+        name: 'EQ3',
+        description: 'EQ3 provides 3 equalizer bins: Low/Mid/High.',
+        createToneFx: () => (new EQ3({
+            high: 0,
+            low: 0,
+            highFrequency: 600,
+            lowFrequency: 100,
+            mid: 0,
+        })),
+        createStateFx: () => ({name: 'EQ3', settings: {
+            high: 0,
+            low: 0,
+            highFrequency: 600,
+            lowFrequency: 100,
+            mid: 0,
         }}),
     },
     {
@@ -104,6 +140,24 @@ const addFxList: AddFxType[] = [
             feedback: 0.4,
             wet: 0.5,
             delayTime: 100,
+        }}),
+    },
+    {
+        name: 'Filter',
+        description: 'Tone.Filter is a filter which allows for all of the same native methods as the BiquadFilterNode. Tone.Filter has the added ability to set the filter rolloff at -12 (default), -24 and -48.',
+        createToneFx: () => (new Filter({
+            Q: 0,
+            detune: 0,
+            frequency: 400,
+            gain: 1,
+            type: 'highpass',
+        })),
+        createStateFx: () => ({name: 'Filter', settings: {
+            Q: 0,
+            detune: 0,
+            frequency: 400,
+            gain: 1,
+            type: 'highpass',
         }}),
     },
     {
@@ -133,6 +187,18 @@ const addFxList: AddFxType[] = [
         }}),
     },
     {
+        name: 'Gate',
+        description: 'Gate only passes a signal through when the incoming signal exceeds a specified threshold. It uses Follower to follow the ampltiude of the incoming signal and compares it to the threshold value using GreaterThan.',
+        createToneFx: () => (new Gate({
+            threshold: -35,
+            smoothing: 0.2,
+        })),
+        createStateFx: () => ({name: 'Gate', settings: {
+            threshold: -35,
+            smoothing: 0.2,
+        }}),
+    },
+    {
         name: 'JCReverb',
         description: 'JCReverb is a simple Schroeder Reverberator tuned by John Chowning in 1970. It is made up of three allpass filters and four FeedbackCombFilter. JCReverb is now implemented with an AudioWorkletNode which may result on performance degradation on some platforms.',
         createToneFx: () => (new JCReverb({
@@ -142,6 +208,16 @@ const addFxList: AddFxType[] = [
         createStateFx: () => ({name: 'JCReverb', settings: {
             wet: 0.4,
             roomSize: 0.5,
+        }}),
+    },
+    {
+        name: 'Limiter',
+        description: 'Limiter will limit the loudness of an incoming signal. Under the hood its composed of a Compressor with a fast attack and release and max compression ratio.',
+        createToneFx: () => (new Limiter({
+            threshold: -20,
+        })),
+        createStateFx: () => ({name: 'Limiter', settings: {
+            threshold: -20,
         }}),
     },
     {
@@ -244,6 +320,7 @@ const addFxList: AddFxType[] = [
             depth: 0.75,
         }}),
     },
+    
 ]
 
 export default addFxList
