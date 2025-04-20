@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 import * as Tone from "tone"
-import { StateFx, ToneFx } from "../types/Fx"
+import FxContainer from "./FxContainer"
 
 const Audio = () => {
-    const [stateFx, setStateFx] = useState<(StateFx | null)[]>(Array(6).fill(null))
-
-    const toneFx = useRef<(ToneFx | null)[]>(Array(6).fill(null))
 
     const mic = useRef<Tone.UserMedia | null>(null)
     const micGain = useRef<Tone.Gain | null>(null)
@@ -187,38 +184,41 @@ const Audio = () => {
     }
 
     return (
-        <div>
-            <input type="range" min={0} max={1} step={0.01} value={micGainValue} onChange={(e) => {
+        <div className="flex flex-col gap-4 items-center">
+            <div>
+                <input type="range" min={0} max={1} step={0.01} value={micGainValue} onChange={(e) => {
                 
-                if (!micGain.current) return
+                    if (!micGain.current) return
                 
-                const value = Number(e.target.value)
-                setMicGainValue(value)
-                micGain.current.gain.value = value
-            }} />
-            <button onClick={onStartMic} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Open Microphone</button>
-            <button onClick={onCloseMic} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Close Microphone</button>
-            <button onClick={toggleMuteInput} className={`m-2 border rounded-lg hover:bg-gray-400 ${muteInput ? 'bg-red-500' : 'bg-gray-500'}`}>Mute Microphone</button>
-            <button onClick={toggleMuteOutput} className={`m-2 border rounded-lg hover:bg-gray-400 ${muteOutput ? 'bg-red-500' : 'bg-gray-500'}`}>Mute Output</button>
-            <button onClick={onStartRecord} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Start Recording</button>
-            <button onClick={onStopRecord} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Stop Recording</button>
-            <button onClick={onPlaySample} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Play</button>
-            <button onClick={onStopSample} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Stop</button>
-            <button onClick={toggleLoop} className={`m-2 border rounded-lg hover:bg-gray-400 ${loop ? 'bg-green-500' : 'bg-gray-500'}`}>Loop</button>
-            <button onClick={onExport} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Export</button>
-            <input type="range" min={0} max={1} step={0.01} value={masterVolumeValue} onChange={(e) => {
+                    const value = Number(e.target.value)
+                    setMicGainValue(value)
+                    micGain.current.gain.value = value
+                }} />
+                <button onClick={onStartMic} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Open Microphone</button>
+                <button onClick={onCloseMic} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Close Microphone</button>
+                <button onClick={toggleMuteInput} className={`m-2 border rounded-lg hover:bg-gray-400 ${muteInput ? 'bg-red-500' : 'bg-gray-500'}`}>Mute Microphone</button>
+                <button onClick={toggleMuteOutput} className={`m-2 border rounded-lg hover:bg-gray-400 ${muteOutput ? 'bg-red-500' : 'bg-gray-500'}`}>Mute Output</button>
+                <button onClick={onStartRecord} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Start Recording</button>
+                <button onClick={onStopRecord} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Stop Recording</button>
+                <button onClick={onPlaySample} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Play</button>
+                <button onClick={onStopSample} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Stop</button>
+                <button onClick={toggleLoop} className={`m-2 border rounded-lg hover:bg-gray-400 ${loop ? 'bg-green-500' : 'bg-gray-500'}`}>Loop</button>
+                <button onClick={onExport} className="m-2 border rounded-lg bg-gray-500 hover:bg-gray-400">Export</button>
+                <input type="range" min={0} max={1} step={0.01} value={masterVolumeValue} onChange={(e) => {
                 
-                if (!masterVolume.current) return
+                    if (!masterVolume.current) return
                 
-                const value = Number(e.target.value)
-                setMasterVolumeValue(value)
-                masterVolume.current.gain.value = value
-            }} />
-            {audioUrl && (
-                <div className="mt-4">
-                    <a href={audioUrl} download="recording.webm">Download recording</a>
-                </div>
-            )}
+                    const value = Number(e.target.value)
+                    setMasterVolumeValue(value)
+                    masterVolume.current.gain.value = value
+                }} />
+                {audioUrl && (
+                    <div className="mt-4">
+                        <a href={audioUrl} download="recording.webm">Download recording</a>
+                    </div>
+                )}
+            </div>
+            <FxContainer />
         </div>
     )
 }
