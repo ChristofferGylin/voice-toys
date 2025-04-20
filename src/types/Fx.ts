@@ -124,6 +124,7 @@ export type PitchShiftSettings = {
     feedback: number;
     wet: number;
     delayTime: number;
+    pitch: number;
 }
 
 export type TremoloSettings = {
@@ -152,16 +153,20 @@ export type ChorusSettings = {
 export type FreeverbSettings = {
     wet: number;
     roomSize: number;
+    dampening: number;
 }
 
 export type PhaserSettings = {
     Q: number;
     frequency: number;
+    octaves: number;
+    baseFrequency: number;
     wet: number;
 }
 
 export type ReverbSettings = {
     wet: number;
+    decay: number;
 }
 
 export type VibratoSettings = {
