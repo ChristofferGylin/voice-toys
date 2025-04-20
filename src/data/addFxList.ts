@@ -1,4 +1,4 @@
-import { AutoFilter } from "tone";
+import { AutoFilter, AutoPanner } from "tone";
 import { type AddFxType } from "../types/Fx";
 
 const addFxList: AddFxType[] = [
@@ -11,7 +11,7 @@ const addFxList: AddFxType[] = [
             wet: 1,
             baseFrequency: 100,
             octaves: 3,
-        })),
+        }).start()),
         createStateFx: () => ({name: 'AutoFilter', settings: {
             depth: 0.5,
             frequency: 300,
@@ -19,7 +19,23 @@ const addFxList: AddFxType[] = [
             baseFrequency: 100,
             octaves: 3,
         }}),
-    }
+    },
+    {
+        name: 'AutoPanner',
+        description: 'AutoPanner is a Panner with an LFO connected to the pan amount.',
+        createToneFx: () => (new AutoPanner({
+            depth: 0.5,
+            frequency: 300,
+            wet: 1,
+        }).start()),
+        createStateFx: () => ({name: 'AutoPanner', settings: {
+            depth: 0.5,
+            frequency: 300,
+            wet: 1,
+            baseFrequency: 100,
+            octaves: 3,
+        }}),
+    },
 ]
 
 export default addFxList
