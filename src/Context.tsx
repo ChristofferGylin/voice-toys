@@ -14,6 +14,8 @@ type ControlSettingsType = {
 
 type ContextType = {
     audioUrl: string | null;
+    connectFx: () => void;
+    disconnectFx: () => void;
     controlSettings: ControlSettingsType;
     masterVolumeSetter: (value: number) => void;
     micGainSetter: (value: number) => void
@@ -321,10 +323,68 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
         toneFx.current[index] = fx
     }
 
+    const disconnectFx = () => {
+        inputGain.current?.disconnect()
+
+        for (const fx of toneFx.current) {
+            if (fx !== null) {
+                fx.disconnect()
+            }
+        }
+
+        
+    }
+
+    const connectFx = () => {
+        for (let i = 0; i < toneFx.current.length; i++) {
+            if (toneFx.current[i] !== null) {
+                const fx = toneFx.current[i] as ToneFx
+                inputGain.current?.connect(fx)
+                break
+            }
+
+            if (i === toneFx.current.length - 1) {
+                if (!outputGain.current) return
+                inputGain.current?.connect(outputGain.current)
+                return
+            }
+        }
+
+        for (let i = 0; i < toneFx.current.length; i++) {
+            if (toneFx.current[i] !== null) {
+                const fx = toneFx.current[i] as ToneFx
+
+                if (i === toneFx.current.length - 1) {
+                    if (!outputGain.current) return
+                    fx.connect(outputGain.current)
+                    break
+
+                }
+
+                for (let j = i + 1; j < toneFx.current.length; j++) {
+                    if (toneFx.current[j] !== null) {
+                        const fx2 = toneFx.current[j] as ToneFx
+                        fx.connect(fx2)
+                        break
+                    }
+
+                    if (j === toneFx.current.length - 1) {
+                        if (!outputGain.current) return
+                        fx.connect(outputGain.current)
+                        break
+    
+                    }
+                }
+            }
+        }
+    }
+
     return (
         <FxContext.Provider value={{
             audioUrl,
+            connectFx,
             controlSettings,
+            disconnectFx,
             micGainSetter,
             onStartMic,
             onCloseMic,
