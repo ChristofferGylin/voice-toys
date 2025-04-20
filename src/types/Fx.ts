@@ -79,6 +79,7 @@ export type  BitCrusherSettings = {
 
 export type DistortionSettings = {
     wet: number;
+    distortion: number;
 }
 
 export type FrequencyShifterSettings = {
@@ -105,6 +106,7 @@ export type AutoPannerSettings = {
 
 export type ChebyshevSettings = {
     wet: number;
+    order: number;
 }
 
 export type FeedbackDelaySettings = {
@@ -134,10 +136,15 @@ export type AutoWahSettings = {
     Q: number;
     gain: number;
     wet: number;
+    baseFrequency: 50,
+    octaves: 6,
+    sensitivity: -30
 }
 
 export type ChorusSettings = {
     frequency: number;
+    delayTime: number;
+    depth: number;
     wet: number;
     feedback: number;
 }
