@@ -1,17 +1,29 @@
-import { createContext, ReactNode, useRef, Ref, useContext } from "react"
-import { ToneFx } from "./types/Fx"
+import { createContext, ReactNode, useRef, Ref, useContext, useState } from "react"
+import { StateFx, ToneFx } from "./types/Fx"
 
 type ContextType = {
+    stateFx: (StateFx | null)[]
+    stateFxSetter: (inded: number, fx: StateFx | null) => void;
     toneFx: Ref<(ToneFx | null)[]>;
-    setToneFx: (index: number, fx: ToneFx) => void;
+    toneFxSetter: (index: number, fx: ToneFx) => void;
 }
 
 const FxContext = createContext<ContextType | undefined>(undefined)
 
 export const FxContextProvider = ({ children }: { children: ReactNode }) => {
+    const [stateFx, setStateFx] = useState<(StateFx | null)[]>(Array(6).fill(null))
     const toneFx = useRef<(ToneFx | null)[]>(Array(6).fill(null))
 
-    const setToneFx = (index: number, fx: ToneFx) => {
+    const stateFxSetter = (index: number, fx: StateFx | null) => {
+        setStateFx((oldState) => {
+            const newState = [...oldState]
+            newState[index] = fx
+
+            return newState
+        })
+    }
+
+    const toneFxSetter = (index: number, fx: ToneFx) => {
         
         if (toneFx.current[index]) {
             toneFx.current[index].dispose()
@@ -22,8 +34,10 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
 
     return (
         <FxContext.Provider value={{
+            stateFx,
+            stateFxSetter,
             toneFx,
-            setToneFx
+            toneFxSetter
         }}>
             {children}
         </FxContext.Provider>

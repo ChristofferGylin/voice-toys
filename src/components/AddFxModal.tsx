@@ -1,6 +1,11 @@
 import { useEffect, useRef } from "react"
+import AddFxItem from "./AddFxItem"
+import { useFxContext } from "../Context"
+import addFxList from "../data/addFxList"
 
 const AddFxModal = ({index, closeModal}: {index: number, closeModal: () => void} ) => {
+
+    const { toneFxSetter, stateFxSetter } = useFxContext()
 
     const modalRef = useRef<HTMLDivElement | null>(null)
 
@@ -24,7 +29,13 @@ const AddFxModal = ({index, closeModal}: {index: number, closeModal: () => void}
             <div ref={modalRef} className="flex flex-col gap-4 p-4 rounded-lg bg-slate-800 text-slate-200">
                 <h1 className="text-4xl">Add FX</h1>
                 <div>
-
+                    {addFxList.map((fx) => {
+                        return <AddFxItem fx={fx} callback={(toneFx, stateFx) => {
+                            toneFxSetter(index, toneFx)
+                            stateFxSetter(index, stateFx)
+                            closeModal()
+                        }} />
+                    })}
                 </div>
             </div>
         </div>

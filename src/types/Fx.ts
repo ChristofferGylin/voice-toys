@@ -1,6 +1,13 @@
 import { AutoFilter, AutoPanner, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
 import { CompressorSettings, EQ3Settings, FilterSettings, GateSettings, LimiterSettings } from "./Component";
 
+export type AddFxType = {
+    name: string;
+    description: string;
+    createToneFx: () => ToneFx;
+    createStateFx: () => StateFx;
+}
+
 export type ToneFx = (
     AutoFilter |
     BitCrusher |

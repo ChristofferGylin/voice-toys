@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 import * as Tone from "tone"
-import { StateFx } from "../types/Fx"
 import FxContainer from "./FxContainer"
 
 const Audio = () => {
-
-    const [stateFx, setStateFx] = useState<(StateFx | null)[]>(Array(6).fill(null))
 
     const mic = useRef<Tone.UserMedia | null>(null)
     const micGain = useRef<Tone.Gain | null>(null)
@@ -221,7 +218,7 @@ const Audio = () => {
                     </div>
                 )}
             </div>
-            <FxContainer stateFx={stateFx} />
+            <FxContainer />
         </div>
     )
 }
