@@ -15,10 +15,6 @@ type ControlSettingsType = {
 type ContextType = {
     audioUrl: string | null;
     controlSettings: ControlSettingsType;
-    controlSettingsSetter: <K extends keyof ControlSettingsType>(
-        key: K,
-        value: ControlSettingsType[K]
-      ) => void;
     masterVolumeSetter: (value: number) => void;
     micGainSetter: (value: number) => void
     onExport: () => void;
@@ -116,16 +112,6 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
         setUpRecoder(outputGain.current, outputMediaRecorder, outputRecordedChunks, (url) => {setAudioUrl(url)})
 
     }, [])
-
-    const controlSettingsSetter = <K extends keyof ControlSettingsType>(
-        key: K,
-        value: ControlSettingsType[K],
-      ) => {
-        setControlSettings(oldState => ({
-          ...oldState,
-          [key]: value,
-        }));
-      }
 
     const onStartMic = async () => {
 
@@ -339,7 +325,6 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
         <FxContext.Provider value={{
             audioUrl,
             controlSettings,
-            controlSettingsSetter,
             micGainSetter,
             onStartMic,
             onCloseMic,
