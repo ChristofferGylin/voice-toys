@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StateFx } from "../types/Fx"
+import { type StateFx } from "../types/Fx"
 import { FaPlusCircle, FaArrowRight } from "react-icons/fa";
 import AddFxModal from "./AddFxModal";
 
@@ -7,7 +7,7 @@ const FxItem = ({fx, index}: {fx: StateFx | null, index: number}) => {
 
     const [showAddFx, setShowAddFx] = useState(false)
 
-    const style = "flex justify-center items-center aspect-square h-full border rounded-lg text-4xl"
+    const style = "flex justify-center items-center aspect-square h-full border rounded-lg text-3xl overflow-hidden"
     const arrowStyle = "text-5xl text-slate-500 last:hidden"
     
     if (!fx) {

@@ -29,8 +29,8 @@ const AddFxModal = ({index, closeModal}: {index: number, closeModal: () => void}
             <div ref={modalRef} className="flex flex-col gap-4 p-4 rounded-lg bg-slate-800 text-slate-200">
                 <h1 className="text-4xl">Add FX</h1>
                 <div>
-                    {addFxList.map((fx) => {
-                        return <AddFxItem fx={fx} callback={(toneFx, stateFx) => {
+                    {addFxList.map((fx, listIndex) => {
+                        return <AddFxItem key={`${fx.name}#${listIndex}`} fx={fx} callback={(toneFx, stateFx) => {
                             toneFxSetter(index, toneFx)
                             stateFxSetter(index, stateFx)
                             closeModal()

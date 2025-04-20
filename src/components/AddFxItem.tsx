@@ -1,4 +1,4 @@
-import { StateFx, ToneFx, type AddFxType } from "../types/Fx"
+import { type StateFx, type ToneFx, type AddFxType } from "../types/Fx"
 
 
 const AddFxItem = ({ fx, callback }: { fx: AddFxType, callback: (toneFx: ToneFx, stateFx: StateFx) => void }) => {
