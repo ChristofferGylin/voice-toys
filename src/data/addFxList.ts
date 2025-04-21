@@ -384,10 +384,21 @@ const addFxList: AddFxType[] = [
             threshold: -35,
             smoothing: 0.2,
         })),
-        createStateFx: () => ({name: 'Gate', settings: {
-            threshold: -35,
-            smoothing: 0.2,
-        }}),
+        createStateFx: () => ({
+            name: 'Gate',
+            settings: {
+                threshold: -35,
+                smoothing: 0.2,
+            },
+            minValues: {
+                threshold: -60,
+                smoothing: 0,
+            },
+            maxValues: {
+                threshold: 6,
+                smoothing: 1,
+            },
+        }),
     },
     {
         name: 'JCReverb',
@@ -396,10 +407,21 @@ const addFxList: AddFxType[] = [
             wet: 0.4,
             roomSize: 0.5,
         })),
-        createStateFx: () => ({name: 'JCReverb', settings: {
-            wet: 0.4,
-            roomSize: 0.5,
-        }}),
+        createStateFx: () => ({
+            name: 'JCReverb',
+            settings: {
+                wet: 0.4,
+                roomSize: 0.5,
+            },
+            minValues: {
+                wet: 0,
+                roomSize: 0,
+            },
+            maxValues: {
+                wet: 1,
+                roomSize: 1,
+            },
+        }),
     },
     {
         name: 'Limiter',
@@ -407,9 +429,18 @@ const addFxList: AddFxType[] = [
         createToneFx: () => (new Limiter({
             threshold: -20,
         })),
-        createStateFx: () => ({name: 'Limiter', settings: {
-            threshold: -20,
-        }}),
+        createStateFx: () => ({
+            name: 'Limiter',
+            settings: {
+                threshold: -20,
+            },
+            minValues: {
+                threshold: -60,
+            },
+            maxValues: {
+                threshold: 6,
+            },
+        }),
     },
     {
         name: 'Phaser',
@@ -421,13 +452,30 @@ const addFxList: AddFxType[] = [
             baseFrequency: 1000,
             wet: 0.5,
         })),
-        createStateFx: () => ({name: 'Phaser', settings: {
-            Q: 0.5,
-            frequency: 15,
-            octaves: 5,
-            baseFrequency: 1000,
-            wet: 0.5,
-        }}),
+        createStateFx: () => ({
+            name: 'Phaser',
+            settings: {
+                Q: 0.5,
+                frequency: 15,
+                octaves: 5,
+                baseFrequency: 1000,
+                wet: 0.5,
+            },
+            minValues: {
+                Q: 0,
+                frequency: 0,
+                octaves: 1,
+                baseFrequency: 1,
+                wet: 0,
+            },
+            maxValues: {
+                Q: 1,
+                frequency: 20000,
+                octaves: 8,
+                baseFrequency: 20000,
+                wet: 1,
+            },
+        }),
     },
     {
         name: 'PingPongDelay',
@@ -437,11 +485,24 @@ const addFxList: AddFxType[] = [
             wet: 0.4,
             delayTime: 60,
         })),
-        createStateFx: () => ({name: 'PingPongDelay', settings: {
-            feedback: 0.5,
-            wet: 0.4,
-            delayTime: 60,
-        }}),
+        createStateFx: () => ({
+            name: 'PingPongDelay',
+            settings: {
+                feedback: 0.5,
+                wet: 0.4,
+                delayTime: 60,
+            },
+            minValues: {
+                feedback: 0,
+                wet: 0,
+                delayTime: 1,
+            },
+            maxValues: {
+                feedback: 1,
+                wet: 1,
+                delayTime: 10000,
+            },
+        }),
     },
     {
         name: 'PitchShift',
@@ -452,12 +513,27 @@ const addFxList: AddFxType[] = [
             delayTime: 0,
             pitch: -3,
         })),
-        createStateFx: () => ({name: 'PitchShift', settings: {
-            feedback: 0,
-            wet: 1,
-            delayTime: 0,
-            pitch: -3,
-        }}),
+        createStateFx: () => ({
+            name: 'PitchShift',
+            settings: {
+                feedback: 0,
+                wet: 1,
+                delayTime: 0,
+                pitch: -3,
+            },
+            minValues: {
+                feedback: 0,
+                wet: 0,
+                delayTime: 0,
+                pitch: -12,
+            },
+            maxValues: {
+                feedback: 1,
+                wet: 1,
+                delayTime: 10000,
+                pitch: 12,
+            },
+        }),
     },
     {
         name: 'Reverb',
@@ -466,10 +542,21 @@ const addFxList: AddFxType[] = [
             wet: 0.4,
             decay: 4,
         })),
-        createStateFx: () => ({name: 'Reverb', settings: {
-            wet: 0.4,
-            decay: 4,
-        }}),
+        createStateFx: () => ({
+            name: 'Reverb',
+            settings: {
+                wet: 0.4,
+                decay: 4,
+            },
+            minValues: {
+                wet: 0,
+                decay: 0,
+            },
+            maxValues: {
+                wet: 1,
+                decay: 10000,
+            },
+        }),
     },
     {
         name: 'StereoWidener',
@@ -478,10 +565,21 @@ const addFxList: AddFxType[] = [
             width: 0.5,
             wet: 1,
         })),
-        createStateFx: () => ({name: 'StereoWidener', settings: {
-            width: 0.5,
-            wet: 1,
-        }}),
+        createStateFx: () => ({
+            name: 'StereoWidener',
+            settings: {
+                width: 0.5,
+                wet: 1,
+            },
+            minValues: {
+                width: 0,
+                wet: 0,
+            },
+            maxValues: {
+                width: 1,
+                wet: 1,
+            },
+        }),
     },
     {
         name: 'Tremolo',
@@ -491,11 +589,24 @@ const addFxList: AddFxType[] = [
             wet: 0.75,
             depth: 0.75,
         }).start()),
-        createStateFx: () => ({name: 'Tremolo', settings: {
-            frequency: 9,
-            wet: 0.75,
-            depth: 0.75,
-        }}),
+        createStateFx: () => ({
+            name: 'Tremolo',
+            settings: {
+                frequency: 9,
+                wet: 0.75,
+                depth: 0.75,
+            },
+            minValues: {
+                frequency: 0,
+                wet: 0,
+                depth: 0,
+            },
+            maxValues: {
+                frequency: 20000,
+                wet: 1,
+                depth: 1,
+            },
+        }),
     },
     {
         name: 'Vibrato',
@@ -505,11 +616,24 @@ const addFxList: AddFxType[] = [
             wet: 0.75,
             depth: 0.75,
         })),
-        createStateFx: () => ({name: 'Vibrato', settings: {
-            frequency: 9,
-            wet: 0.75,
-            depth: 0.75,
-        }}),
+        createStateFx: () => ({
+            name: 'Vibrato',
+            settings: {
+                frequency: 9,
+                wet: 0.75,
+                depth: 0.75,
+            },
+            minValues: {
+                frequency: 0,
+                wet: 0,
+                depth: 0,
+            },
+            maxValues: {
+                frequency: 20000,
+                wet: 1,
+                depth: 1,
+            },
+        }),
     },
     
 ]
