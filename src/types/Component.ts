@@ -19,7 +19,6 @@ export type FilterSettings = {
     detune: number;
     frequency: number;
     gain: number;
-    type: string;
 }
 
 export type GateSettings = {

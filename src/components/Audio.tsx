@@ -1,9 +1,10 @@
 import { useFxContext } from "../Context"
+import FxControlPanel from "./Fx/FxControlPanel"
 import FxContainer from "./FxContainer"
 
 const Audio = () => {
 
-    const { audioUrl, controlSettings, onStartMic, onCloseMic, onToggleMuteInput, onToggleMuteOutput, micGainSetter, masterVolumeSetter, onStartRecord, onStopRecord, onStartPlay, onStopPlay, onToggleLoop, onExport} = useFxContext()
+    const { audioUrl, controlSettings, onStartMic, onCloseMic, onToggleMuteInput, onToggleMuteOutput, micGainSetter, masterVolumeSetter, onStartRecord, onStopRecord, onStartPlay, onStopPlay, onToggleLoop, onExport, stateFx, toneFx} = useFxContext()
 
     return (
         <div className="flex flex-col gap-4 items-center">
@@ -25,6 +26,14 @@ const Audio = () => {
                 )}
             </div>
             <FxContainer />
+            <div>
+                {stateFx.map((fx) => {
+
+                    if (!fx || toneFx === null) return <></>
+
+                    return <FxControlPanel stateFx={fx} />
+                })}
+            </div>
         </div>
     )
 }
