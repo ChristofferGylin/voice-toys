@@ -62,6 +62,56 @@ export type StateFx = {
         LimiterSettings |
         EQ3Settings
     );
+    maxValues: (
+        AutoFilterSettings | 
+        BitCrusherSettings |
+        DistortionSettings |
+        FrequencyShifterSettings |
+        PingPongDelaySettings |
+        StereoWidenerSettings |
+        AutoPannerSettings |
+        ChebyshevSettings |
+        FeedbackDelaySettings |
+        JCReverbSettings |
+        PitchShiftSettings |
+        TremoloSettings |
+        AutoWahSettings |
+        ChorusSettings |
+        FreeverbSettings |
+        PhaserSettings |
+        ReverbSettings |
+        VibratoSettings |
+        FilterSettings |
+        GateSettings |
+        CompressorSettings |
+        LimiterSettings |
+        EQ3Settings
+    );
+    minValues: (
+        AutoFilterSettings | 
+        BitCrusherSettings |
+        DistortionSettings |
+        FrequencyShifterSettings |
+        PingPongDelaySettings |
+        StereoWidenerSettings |
+        AutoPannerSettings |
+        ChebyshevSettings |
+        FeedbackDelaySettings |
+        JCReverbSettings |
+        PitchShiftSettings |
+        TremoloSettings |
+        AutoWahSettings |
+        ChorusSettings |
+        FreeverbSettings |
+        PhaserSettings |
+        ReverbSettings |
+        VibratoSettings |
+        FilterSettings |
+        GateSettings |
+        CompressorSettings |
+        LimiterSettings |
+        EQ3Settings
+    );
 }
 
 export type AutoFilterSettings = {
@@ -137,9 +187,9 @@ export type AutoWahSettings = {
     Q: number;
     gain: number;
     wet: number;
-    baseFrequency: 50,
-    octaves: 6,
-    sensitivity: -30
+    baseFrequency: number,
+    octaves: number,
+    sensitivity: number
 }
 
 export type ChorusSettings = {
