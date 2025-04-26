@@ -326,9 +326,12 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
     const disconnectFx = () => {
         inputGain.current?.disconnect()
 
-        for (const fx of toneFx.current) {
-            if (fx !== null) {
-                fx.disconnect()
+        for (const stFx of stateFx) {
+            if (stFx !== null) {
+
+                const tnFx = toneFx.current[stFx.id]
+
+                tnFx.fx.disconnect()
             }
         }
 
