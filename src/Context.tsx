@@ -1,6 +1,6 @@
-import { createContext, ReactNode, useRef, Ref, useContext, useState, useEffect } from "react"
+import { createContext, ReactNode, useRef, useContext, useState, useEffect, RefObject } from "react"
 import { StateFx, ToneFx } from "./types/Fx"
-import { Gain, getContext, Player, start, UserMedia } from "tone";
+import { Gain, getContext, Player, start, UserMedia } from "tone"
 
 type ControlSettingsType = {
     isLooping: boolean;
@@ -27,19 +27,18 @@ type ContextType = {
     onStartPlay: () => void;
     onStopPlay: () => void;
     stateFx: (StateFx | null)[]
-    stateFxSetter: (inded: number, fx: StateFx | null) => void;
     onToggleLoop: () => void;
     onToggleMuteInput: () => void;
     onToggleMuteOutput: () => void;
-    toneFx: Ref<(ToneFx | null)[]>;
-    toneFxSetter: (index: number, fx: ToneFx) => void;
+    toneFx: RefObject<Record<string, ToneFx>>;
+    setFx: ({stFx, tnFx, index, oldId}: {stFx: StateFx, tnFx: ToneFx, index: number, oldId: string | undefined}) => void;
 }
 
 const FxContext = createContext<ContextType | undefined>(undefined)
 
 export const FxContextProvider = ({ children }: { children: ReactNode }) => {
     const [stateFx, setStateFx] = useState<(StateFx | null)[]>(Array(6).fill(null))
-    const toneFx = useRef<(ToneFx | null)[]>(Array(6).fill(null))
+    const toneFx = useRef<Record<string, ToneFx>>({})
     const mic = useRef<UserMedia | null>(null)
     const micGain = useRef<Gain | null>(null)
     const inputGain = useRef<Gain | null>(null)
@@ -114,6 +113,11 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
         setUpRecoder(outputGain.current, outputMediaRecorder, outputRecordedChunks, (url) => {setAudioUrl(url)})
 
     }, [])
+
+    useEffect(() => {
+        disconnectFx()
+        connectFx()
+    }, [stateFx])
 
     const onStartMic = async () => {
 
@@ -305,30 +309,32 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
         }
     }
 
-    const stateFxSetter = (index: number, fx: StateFx | null) => {
+    const setFx = ({stFx, tnFx, index, oldId}: {stFx: StateFx, tnFx: ToneFx, index: number, oldId: string | undefined}) => {
+        
+        if (oldId) {
+            toneFx.current[oldId].fx.dispose()
+            delete toneFx.current[oldId]
+        }
+
+        toneFx.current[tnFx.id] = tnFx
+
         setStateFx((oldState) => {
             const newState = [...oldState]
-            newState[index] = fx
+            newState[index] = stFx
 
             return newState
         })
     }
 
-    const toneFxSetter = (index: number, fx: ToneFx) => {
-        
-        if (toneFx.current[index]) {
-            toneFx.current[index].dispose()
-        }
-        
-        toneFx.current[index] = fx
-    }
-
     const disconnectFx = () => {
         inputGain.current?.disconnect()
 
-        for (const fx of toneFx.current) {
-            if (fx !== null) {
-                fx.disconnect()
+        for (const stFx of stateFx) {
+            if (stFx !== null) {
+
+                const tnFx = toneFx.current[stFx.id]
+
+                tnFx.fx.disconnect()
             }
         }
 
@@ -336,41 +342,57 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const connectFx = () => {
-        for (let i = 0; i < toneFx.current.length; i++) {
-            if (toneFx.current[i] !== null) {
-                const fx = toneFx.current[i] as ToneFx
-                inputGain.current?.connect(fx)
+
+        for (let i = 0; i < stateFx.length; i++) {
+
+        }
+
+        for (let i = 0; i < stateFx.length; i++) {
+            if (stateFx[i] !== null) {
+
+                const stFx: StateFx | null = stateFx[i]
+
+                if (!stFx) return
+
+                const tnFx = toneFx.current[stFx.id]
+                inputGain.current?.connect(tnFx.fx)
                 break
             }
 
-            if (i === toneFx.current.length - 1) {
+            if (i === stateFx.length - 1) {
                 if (!outputGain.current) return
                 inputGain.current?.connect(outputGain.current)
                 return
             }
         }
 
-        for (let i = 0; i < toneFx.current.length; i++) {
-            if (toneFx.current[i] !== null) {
-                const fx = toneFx.current[i] as ToneFx
+        for (let i = 0; i < stateFx.length; i++) {
 
-                if (i === toneFx.current.length - 1) {
+            const stFx = stateFx[i]
+
+            if (stFx !== null) {
+                const tnFx = toneFx.current[stFx.id]
+
+                if (i === stateFx.length - 1) {
                     if (!outputGain.current) return
-                    fx.connect(outputGain.current)
+                    tnFx.fx.connect(outputGain.current)
                     break
 
                 }
 
-                for (let j = i + 1; j < toneFx.current.length; j++) {
-                    if (toneFx.current[j] !== null) {
-                        const fx2 = toneFx.current[j] as ToneFx
-                        fx.connect(fx2)
+                for (let j = i + 1; j < stateFx.length; j++) {
+
+                    const nextStFx = stateFx[j]
+
+                    if (nextStFx !== null) {
+                        const nextTnFx = toneFx.current[nextStFx.id]
+                        tnFx.fx.connect(nextTnFx.fx)
                         break
                     }
 
-                    if (j === toneFx.current.length - 1) {
+                    if (j === stateFx.length - 1) {
                         if (!outputGain.current) return
-                        fx.connect(outputGain.current)
+                        tnFx.fx.connect(outputGain.current)
                         break
     
                     }
@@ -393,14 +415,13 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
             onStartRecord,
             onStopRecord,
             stateFx,
-            stateFxSetter,
             masterVolumeSetter,
             onExport,
             onToggleLoop,
             onToggleMuteInput,
             onToggleMuteOutput,
             toneFx,
-            toneFxSetter
+            setFx,
         }}>
             {children}
         </FxContext.Provider>

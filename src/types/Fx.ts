@@ -1,117 +1,88 @@
 import { AutoFilter, AutoPanner, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { CompressorSettings, EQ3Settings, FilterSettings, GateSettings, LimiterSettings } from "./Component";
+// import { CompressorSettings, EQ3Settings, FilterSettings, GateSettings, LimiterSettings } from "./Component";
+
+export function assertsAutoFilter (fxInstance: any): asserts fxInstance is AutoFilter {
+    if (fxInstance.name !== 'AutoFilter') {
+        throw new TypeError('Fx is not an instance of Autofilter')
+    }
+}
+
+export function assertsFeedbackDelay (fxInstance: any): asserts fxInstance is FeedbackDelay {
+    if (fxInstance.name !== 'FeedbackDelay') {
+        throw new TypeError('Fx is not an instance of FeedbackDelay')
+    }
+}
 
 export type AddFxType = {
     name: string;
     description: string;
     createToneFx: () => ToneFx;
-    createStateFx: () => StateFx;
+    createStateFx: (tnFx: ToneFx) => StateFx;
 }
 
-export type ToneFx = (
-    AutoFilter |
-    BitCrusher |
-    Distortion |
-    FrequencyShifter |
-    PingPongDelay |
-    StereoWidener |
-    AutoPanner |
-    Chebyshev |
-    FeedbackDelay |
-    JCReverb |
-    PitchShift |
-    Tremolo |
-    AutoWah |
-    Chorus |
-    Freeverb |
-    Phaser |
-    Reverb |
-    Vibrato |
-    Filter |
-    Gate |
-    Compressor |
-    Limiter |
-    EQ3
-)
+export type StateParams = {
+    name: string;
+    min: number;
+    max: number;
+    value: number;
+}
 
+export type ToneFx = {
+    id: string;
+    fx: (
+        AutoFilter |
+        BitCrusher |
+        Distortion |
+        FrequencyShifter |
+        PingPongDelay |
+        StereoWidener |
+        AutoPanner |
+        Chebyshev |
+        FeedbackDelay |
+        JCReverb |
+        PitchShift |
+        Tremolo |
+        AutoWah |
+        Chorus |
+        Freeverb |
+        Phaser |
+        Reverb |
+        Vibrato |
+        Filter |
+        Gate |
+        Compressor |
+        Limiter |
+        EQ3
+    );
+    getSetters: () => ((value: number) => void)[];
+    getParams: () => StateParams[];
+}
 
 export type StateFx = {
-    name: string;
-    settings: (
-        AutoFilterSettings | 
-        BitCrusherSettings |
-        DistortionSettings |
-        FrequencyShifterSettings |
-        PingPongDelaySettings |
-        StereoWidenerSettings |
-        AutoPannerSettings |
-        ChebyshevSettings |
-        FeedbackDelaySettings |
-        JCReverbSettings |
-        PitchShiftSettings |
-        TremoloSettings |
-        AutoWahSettings |
-        ChorusSettings |
-        FreeverbSettings |
-        PhaserSettings |
-        ReverbSettings |
-        VibratoSettings |
-        FilterSettings |
-        GateSettings |
-        CompressorSettings |
-        LimiterSettings |
-        EQ3Settings
-    );
-    maxValues: (
-        AutoFilterSettings | 
-        BitCrusherSettings |
-        DistortionSettings |
-        FrequencyShifterSettings |
-        PingPongDelaySettings |
-        StereoWidenerSettings |
-        AutoPannerSettings |
-        ChebyshevSettings |
-        FeedbackDelaySettings |
-        JCReverbSettings |
-        PitchShiftSettings |
-        TremoloSettings |
-        AutoWahSettings |
-        ChorusSettings |
-        FreeverbSettings |
-        PhaserSettings |
-        ReverbSettings |
-        VibratoSettings |
-        FilterSettings |
-        GateSettings |
-        CompressorSettings |
-        LimiterSettings |
-        EQ3Settings
-    );
-    minValues: (
-        AutoFilterSettings | 
-        BitCrusherSettings |
-        DistortionSettings |
-        FrequencyShifterSettings |
-        PingPongDelaySettings |
-        StereoWidenerSettings |
-        AutoPannerSettings |
-        ChebyshevSettings |
-        FeedbackDelaySettings |
-        JCReverbSettings |
-        PitchShiftSettings |
-        TremoloSettings |
-        AutoWahSettings |
-        ChorusSettings |
-        FreeverbSettings |
-        PhaserSettings |
-        ReverbSettings |
-        VibratoSettings |
-        FilterSettings |
-        GateSettings |
-        CompressorSettings |
-        LimiterSettings |
-        EQ3Settings
-    );
+    name: 'AutoFilter' |
+    'BitCrusher' |
+    'Distortion' |
+    'FrequencyShifter' |
+    'PingPongDelay' |
+    'StereoWidener' |
+    'AutoPanner' |
+    'Chebyshev' |
+    'FeedbackDelay' |
+    'JCReverb' |
+    'PitchShift' |
+    'Tremolo' |
+    'AutoWah' |
+    'Chorus' |
+    'Freeverb' |
+    'Phaser' |
+    'Reverb' |
+    'Vibrato' |
+    'Filter' |
+    'Gate' |
+    'Compressor' |
+    'Limiter' |
+    'EQ3'
+    id: string;
 }
 
 export type AutoFilterSettings = {
