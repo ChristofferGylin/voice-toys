@@ -20,31 +20,35 @@ export type AddFxType = {
     createStateFx: (fx: ToneFx) => StateFx;
 }
 
-export type ToneFx = (
-    AutoFilter |
-    BitCrusher |
-    Distortion |
-    FrequencyShifter |
-    PingPongDelay |
-    StereoWidener |
-    AutoPanner |
-    Chebyshev |
-    FeedbackDelay |
-    JCReverb |
-    PitchShift |
-    Tremolo |
-    AutoWah |
-    Chorus |
-    Freeverb |
-    Phaser |
-    Reverb |
-    Vibrato |
-    Filter |
-    Gate |
-    Compressor |
-    Limiter |
-    EQ3
-)
+export type ToneFx = {
+    fx: (
+        AutoFilter |
+        BitCrusher |
+        Distortion |
+        FrequencyShifter |
+        PingPongDelay |
+        StereoWidener |
+        AutoPanner |
+        Chebyshev |
+        FeedbackDelay |
+        JCReverb |
+        PitchShift |
+        Tremolo |
+        AutoWah |
+        Chorus |
+        Freeverb |
+        Phaser |
+        Reverb |
+        Vibrato |
+        Filter |
+        Gate |
+        Compressor |
+        Limiter |
+        EQ3
+    );
+    getParams: () => StateFxParam[];
+    setParam: (param: string, value: number | string) => void;
+}
 
 export type StateFxParam = {
     name: string;
@@ -77,7 +81,7 @@ export type StateFx = {
     'Compressor' |
     'Limiter' |
     'EQ3'
-    params: StateFxParam[]
+    id: string;
 }
 
 export type AutoFilterSettings = {

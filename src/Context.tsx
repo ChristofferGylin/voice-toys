@@ -31,7 +31,7 @@ type ContextType = {
     onToggleLoop: () => void;
     onToggleMuteInput: () => void;
     onToggleMuteOutput: () => void;
-    toneFx: Ref<(ToneFx | null)[]>;
+    toneFx: Ref<Record<string, ToneFx>>;
     toneFxSetter: (index: number, fx: ToneFx) => void;
 }
 
@@ -39,7 +39,7 @@ const FxContext = createContext<ContextType | undefined>(undefined)
 
 export const FxContextProvider = ({ children }: { children: ReactNode }) => {
     const [stateFx, setStateFx] = useState<(StateFx | null)[]>(Array(6).fill(null))
-    const toneFx = useRef<(ToneFx | null)[]>(Array(6).fill(null))
+    const toneFx = useRef<Record<string, ToneFx>>({})
     const mic = useRef<UserMedia | null>(null)
     const micGain = useRef<Gain | null>(null)
     const inputGain = useRef<Gain | null>(null)
