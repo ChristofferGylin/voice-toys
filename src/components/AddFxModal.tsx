@@ -6,7 +6,7 @@ import { IoCloseCircleOutline } from "react-icons/io5"
 
 const AddFxModal = ({index, id, closeModal}: {index: number, id?: string, closeModal: () => void} ) => {
 
-    const { connectFx, disconnectFx, setFx } = useFxContext()
+    const {  setFx } = useFxContext()
 
     const modalRef = useRef<HTMLDivElement | null>(null)
 

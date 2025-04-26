@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useRef, Ref, useContext, useState, useEffect, MutableRefObject, RefObject } from "react"
+import { createContext, ReactNode, useRef, useContext, useState, useEffect, RefObject } from "react"
 import { StateFx, ToneFx } from "./types/Fx"
 import { Gain, getContext, Player, start, UserMedia } from "tone"
 

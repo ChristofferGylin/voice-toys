@@ -1,5 +1,5 @@
 import { AutoFilter, AutoPanner, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { CompressorSettings, EQ3Settings, FilterSettings, GateSettings, LimiterSettings } from "./Component";
+// import { CompressorSettings, EQ3Settings, FilterSettings, GateSettings, LimiterSettings } from "./Component";
 
 export function assertsAutoFilter (fxInstance: any): asserts fxInstance is AutoFilter {
     if (fxInstance.name !== 'AutoFilter') {
@@ -58,13 +58,6 @@ export type ToneFx = {
     getParams: () => StateParams[];
 }
 
-export type StateFxParam = {
-    name: string;
-    min: number;
-    max: number;
-    value: number;
-    setter: (value: number) => void;
-}
 export type StateFx = {
     name: 'AutoFilter' |
     'BitCrusher' |
