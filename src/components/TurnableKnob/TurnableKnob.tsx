@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import StandardKnob from "./Knobs/StandardKnob";
 import { setStatusRing } from "./setStatusRing";
 import { KnobRange } from "../../types/Knobs";
@@ -14,12 +14,12 @@ const TurnableKnob = ({
   range?: KnobRange;
   callback: (value: number) => void;
 }) => {
-  const [currentValue, setCurrentValue] = useState(value);
+  
   let offsetOrigin: number | undefined;
   const maxRotation = 270;
   const minValue = 0;
   const maxValue = 1;
-  const rotation = `${maxRotation * currentValue}deg`;
+  const rotation = `${maxRotation * value}deg`;
   const lightRingRef = useRef(null);
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -27,14 +27,13 @@ const TurnableKnob = ({
 
     const offset = -((e.clientY - offsetOrigin) / 100);
 
-    let newValue = currentValue + offset;
+    let newValue = value + offset;
 
     if (newValue < minValue) {
       newValue = minValue;
     } else if (newValue > maxValue) {
       newValue = maxValue;
     }
-    setCurrentValue(newValue);
     callback(newValue);
   };
 
@@ -51,9 +50,9 @@ const TurnableKnob = ({
 
   useEffect(() => {
     if (lightRingRef.current) {
-      setStatusRing(lightRingRef.current, range, currentValue);
+      setStatusRing(lightRingRef.current, range, value);
     }
-  }, [range, currentValue]);
+  }, [range, value]);
 
   return (
     <div className={`${width} flex aspect-square items-center justify-center`}>
