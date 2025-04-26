@@ -17,10 +17,11 @@ export type AddFxType = {
     name: string;
     description: string;
     createToneFx: () => ToneFx;
-    createStateFx: (fx: ToneFx) => StateFx;
+    createStateFx: (id: string) => StateFx;
 }
 
 export type ToneFx = {
+    id: string;
     fx: (
         AutoFilter |
         BitCrusher |

@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useRef, Ref, useContext, useState, useEffect } from "react"
 import { StateFx, ToneFx } from "./types/Fx"
-import { Gain, getContext, Player, start, UserMedia } from "tone";
+import { Gain, getContext, Player, start, UserMedia } from "tone"
+import { v4 as uuidv4 } from "uuid"
 
 type ControlSettingsType = {
     isLooping: boolean;
@@ -32,7 +33,7 @@ type ContextType = {
     onToggleMuteInput: () => void;
     onToggleMuteOutput: () => void;
     toneFx: Ref<Record<string, ToneFx>>;
-    toneFxSetter: (index: number, fx: ToneFx) => void;
+    toneFxSetter: (oldFxId: string, nexFxId: string, fx: ToneFx) => void;
 }
 
 const FxContext = createContext<ContextType | undefined>(undefined)
@@ -314,13 +315,12 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
         })
     }
 
-    const toneFxSetter = (index: number, fx: ToneFx) => {
-        
-        if (toneFx.current[index]) {
-            toneFx.current[index].dispose()
-        }
-        
-        toneFx.current[index] = fx
+    const toneFxSetter = (oldFxId: string, fx: ToneFx) => {
+
+        toneFx.current[oldFxId].fx.dispose()
+        delete toneFx.current[oldFxId]
+
+        toneFx.current[uuidv4()] = fx
     }
 
     const disconnectFx = () => {

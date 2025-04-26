@@ -1,30 +1,48 @@
 import { AutoFilter, AutoPanner, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
 import { assertsAutoFilter, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
+import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
     {
         name: 'AutoFilter',
         description: 'AutoFilter is a Tone.Filter with a Tone.LFO connected to the filter cutoff frequency. Setting the LFO rate and depth allows for control over the filter modulation rate and depth.',
-        createToneFx: () => (new AutoFilter({
-            depth: 0.5,
-            frequency: 4,
-            wet: 1,
-            baseFrequency: 1,
-            octaves: 3,
-        }).start()),
-        createStateFx: (fx: ToneFx) => {
-
-            assertsAutoFilter(fx)
+        createToneFx: () => {
             
-            return (
-                {name: 'AutoFilter',
-                    params: [
-                    {name: 'depth', min: 0, max: 1, value: 0.5, setter: (value: number) => {fx.set({depth: value})}},
-                    {name: 'frequency', min: 0, max: 20000, value: 4, setter: (value: number) => {fx.frequency.value = value}},
-                    {name: 'wet', min: 0, max: 1, value: 1, setter: (value: number) => {fx.wet.value = value}},
-                    {name: 'baseFrequency', min: 0, max: 20000, value: 1, setter: (value: number) => {fx.set({baseFrequency: value})}},
-                    {name: 'octaves', min: 1, max: 8, value: 3, setter: (value: number) => {fx.set({octaves: value})}},
-                ]})
+            return {
+                id: uuidv4(),
+                getParams: () => {
+                    return []
+                },
+                setParam: (param, value) => {
+                    console.log(param)
+                    console.log(value)
+                },
+                fx: new AutoFilter({
+                    depth: 0.5,
+                    frequency: 4,
+                    wet: 1,
+                    baseFrequency: 1,
+                    octaves: 3,
+                }).start()
+            }
+        },
+        createStateFx: (id: string) => {
+
+            return {
+                id,
+                name: 'AutoFilter'
+            }
+            
+            
+            // return (
+            //     {name: 'AutoFilter',
+            //         params: [
+            //         {name: 'depth', min: 0, max: 1, value: 0.5, setter: (value: number) => {fx.set({depth: value})}},
+            //         {name: 'frequency', min: 0, max: 20000, value: 4, setter: (value: number) => {fx.frequency.value = value}},
+            //         {name: 'wet', min: 0, max: 1, value: 1, setter: (value: number) => {fx.wet.value = value}},
+            //         {name: 'baseFrequency', min: 0, max: 20000, value: 1, setter: (value: number) => {fx.set({baseFrequency: value})}},
+            //         {name: 'octaves', min: 1, max: 8, value: 3, setter: (value: number) => {fx.set({octaves: value})}},
+            //     ]})
         },
     },
     // {
@@ -258,22 +276,37 @@ const addFxList: AddFxType[] = [
     {
         name: 'FeedbackDelay',
         description: 'FeedbackDelay is a DelayNode in which part of output signal is fed back into the delay.',
-        createToneFx: () => (new FeedbackDelay({
-            feedback: 0.4,
-            wet: 0.5,
-            delayTime: 100,
-        })),
-        createStateFx: (fx: ToneFx) => {
+        createToneFx: () => {
+            return {
+                id: uuidv4(),
+                getParams: () => {
+                    return []
+                },
+                setParam: (param, value) => {
+                    console.log(param)
+                    console.log(value)
+                },
+                fx: new FeedbackDelay({
+                    feedback: 0.4,
+                    wet: 0.5,
+                    delayTime: 100,
+                })
+            }
+        },
+        createStateFx: (id: string) => {
 
-            assertsFeedbackDelay(fx)
+            return {
+                id,
+                name: 'AutoFilter'
+            }
             
-            return (
-                {name: 'FeedbackDelay',
-                    params: [
-                    {name: 'wet', min: 0, max: 1, value: 1, setter: (value: number) => {fx.wet.value = value}},
-                    {name: 'feedback', min: 0, max: 1, value: 0.4, setter: (value: number) => {fx.feedback.value = value}},
-                    {name: 'delayTime', min: 0, max: 100, value: 100, setter: (value: number) => {fx.delayTime.value = value}},
-                ]})
+            // return (
+            //     {name: 'FeedbackDelay',
+            //         params: [
+            //         {name: 'wet', min: 0, max: 1, value: 1, setter: (value: number) => {fx.wet.value = value}},
+            //         {name: 'feedback', min: 0, max: 1, value: 0.4, setter: (value: number) => {fx.feedback.value = value}},
+            //         {name: 'delayTime', min: 0, max: 100, value: 100, setter: (value: number) => {fx.delayTime.value = value}},
+            //     ]})
         },
     },
     // {
