@@ -52,7 +52,7 @@ const FxThumb = ({ stateFx }: { stateFx: StateFx }) => {
                                         setters[index](scaledValue)
                                     }}  
                                 />
-                                <p className="text-sm">{param.value}</p>
+                                <p className="text-sm">{param.value.toFixed(2)}</p>
                             </li>
                         )
                     })}

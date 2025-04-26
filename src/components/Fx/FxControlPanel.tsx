@@ -38,7 +38,7 @@ const FxControlPanel = ({ stateFx, setters, params, closeModal }: { stateFx: Sta
                                 setters[index](scaledValue)
                             }}  
                         />
-                        <p className="text-sm">{param.value}</p>
+                        <p className="text-sm">{param.value.toFixed(2)}</p>
                     </div>
                     
                 ))}
