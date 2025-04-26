@@ -336,41 +336,57 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const connectFx = () => {
-        for (let i = 0; i < toneFx.current.length; i++) {
-            if (toneFx.current[i] !== null) {
-                const fx = toneFx.current[i] as ToneFx
-                inputGain.current?.connect(fx)
+
+        for (let i = 0; i < stateFx.length; i++) {
+
+        }
+
+        for (let i = 0; i < stateFx.length; i++) {
+            if (stateFx[i] !== null) {
+
+                const stFx: StateFx | null = stateFx[i]
+
+                if (!stFx) return
+
+                const tnFx = toneFx.current[stFx.id]
+                inputGain.current?.connect(tnFx.fx)
                 break
             }
 
-            if (i === toneFx.current.length - 1) {
+            if (i === stateFx.length - 1) {
                 if (!outputGain.current) return
                 inputGain.current?.connect(outputGain.current)
                 return
             }
         }
 
-        for (let i = 0; i < toneFx.current.length; i++) {
-            if (toneFx.current[i] !== null) {
-                const fx = toneFx.current[i] as ToneFx
+        for (let i = 0; i < stateFx.length; i++) {
 
-                if (i === toneFx.current.length - 1) {
+            const stFx = stateFx[i]
+
+            if (stFx !== null) {
+                const tnFx = toneFx.current[stFx.id]
+
+                if (i === stateFx.length - 1) {
                     if (!outputGain.current) return
-                    fx.connect(outputGain.current)
+                    tnFx.fx.connect(outputGain.current)
                     break
 
                 }
 
-                for (let j = i + 1; j < toneFx.current.length; j++) {
-                    if (toneFx.current[j] !== null) {
-                        const fx2 = toneFx.current[j] as ToneFx
-                        fx.connect(fx2)
+                for (let j = i + 1; j < stateFx.length; j++) {
+
+                    const nextStFx = stateFx[j]
+
+                    if (nextStFx !== null) {
+                        const nextTnFx = toneFx.current[nextStFx.id]
+                        tnFx.fx.connect(nextTnFx.fx)
                         break
                     }
 
-                    if (j === toneFx.current.length - 1) {
+                    if (j === stateFx.length - 1) {
                         if (!outputGain.current) return
-                        fx.connect(outputGain.current)
+                        tnFx.fx.connect(outputGain.current)
                         break
     
                     }
