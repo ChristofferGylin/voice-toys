@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useRef, Ref, useContext, useState, useEffect } from "react"
+import { createContext, ReactNode, useRef, Ref, useContext, useState, useEffect, MutableRefObject, RefObject } from "react"
 import { StateFx, ToneFx } from "./types/Fx"
 import { Gain, getContext, Player, start, UserMedia } from "tone"
 
@@ -30,7 +30,7 @@ type ContextType = {
     onToggleLoop: () => void;
     onToggleMuteInput: () => void;
     onToggleMuteOutput: () => void;
-    toneFx: Ref<Record<string, ToneFx>>;
+    toneFx: RefObject<Record<string, ToneFx>>;
     setFx: ({stFx, tnFx, index, oldId}: {stFx: StateFx, tnFx: ToneFx, index: number, oldId: string | undefined}) => void;
 }
 
@@ -113,6 +113,11 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
         setUpRecoder(outputGain.current, outputMediaRecorder, outputRecordedChunks, (url) => {setAudioUrl(url)})
 
     }, [])
+
+    useEffect(() => {
+        disconnectFx()
+        connectFx()
+    }, [stateFx])
 
     const onStartMic = async () => {
 

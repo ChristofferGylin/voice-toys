@@ -17,7 +17,14 @@ export type AddFxType = {
     name: string;
     description: string;
     createToneFx: () => ToneFx;
-    createStateFx: (id: string) => StateFx;
+    createStateFx: (tnFx: ToneFx) => StateFx;
+}
+
+export type StateParams = {
+    name: string;
+    min: number;
+    max: number;
+    value: number;
 }
 
 export type ToneFx = {
@@ -47,7 +54,8 @@ export type ToneFx = {
         Limiter |
         EQ3
     );
-    getParams: () => StateFxParam[];
+    getSetters: () => ((value: number) => void)[];
+    getParams: () => StateParams[];
 }
 
 export type StateFxParam = {

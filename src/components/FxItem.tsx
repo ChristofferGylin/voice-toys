@@ -22,7 +22,7 @@ const FxItem = ({fx, index}: {fx: StateFx | null, index: number}) => {
     return (
         <>
             <div  className={style}>
-                <FxThumb name={fx.name} />
+                <FxThumb stateFx={fx} />
             </div>
             <FaArrowRight className={arrowStyle}/>
         </>

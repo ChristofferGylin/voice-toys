@@ -10,13 +10,30 @@ const addFxList: AddFxType[] = [
             
             return {
                 id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsAutoFilter(tnFx)
+                    return [
+                        (value: number) => {tnFx.set({depth: value})},
+                        (value: number) => {tnFx.frequency.value = value},
+                        (value: number) => {tnFx.wet.value = value},
+                        (value: number) => {tnFx.set({baseFrequency: value})},
+                        (value: number) => {tnFx.set({octaves: value})}
+                    ]
+                },
                 getParams: function () {
 
                     const tnFx = this.fx
 
                     assertsAutoFilter(tnFx)
                     return [
-                        {name: 'depth', min: 0, max: 1, value: Number(tnFx.depth.value), setter: (value: number) => {tnFx.set({depth: value})}},
+                        { name: 'depth', min: 0, max: 1, value: Number(tnFx.depth.value) },
+                        { name: 'frequency', min: 0, max: 20000, value: Number(tnFx.frequency.value) },
+                        { name: 'wet', min: 0, max: 1, value: Number(tnFx.wet.value) },
+                        { name: 'baseFrequency', min: 0, max: 20000, value: Number(tnFx.baseFrequency) },
+                        { name: 'octaves', min: 1, max: 8, value: Number(tnFx.octaves) },
                     ]
                 },
                 fx: new AutoFilter({
@@ -28,23 +45,14 @@ const addFxList: AddFxType[] = [
                 }).start()
             }
         },
-        createStateFx: (id: string) => {
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsAutoFilter(tnFx.fx)
 
             return {
-                id,
-                name: 'AutoFilter'
+                id: tnFx.id,
+                name: 'AutoFilter',
             }
-            
-            
-            // return (
-            //     {name: 'AutoFilter',
-            //         params: [
-            //         {name: 'depth', min: 0, max: 1, value: 0.5, setter: (value: number) => {fx.set({depth: value})}},
-            //         {name: 'frequency', min: 0, max: 20000, value: 4, setter: (value: number) => {fx.frequency.value = value}},
-            //         {name: 'wet', min: 0, max: 1, value: 1, setter: (value: number) => {fx.wet.value = value}},
-            //         {name: 'baseFrequency', min: 0, max: 20000, value: 1, setter: (value: number) => {fx.set({baseFrequency: value})}},
-            //         {name: 'octaves', min: 1, max: 8, value: 3, setter: (value: number) => {fx.set({octaves: value})}},
-            //     ]})
         },
     },
     // {
@@ -281,6 +289,18 @@ const addFxList: AddFxType[] = [
         createToneFx: () => {
             return {
                 id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsFeedbackDelay(tnFx)
+
+                    return [
+                        (value: number) => {tnFx.wet.value = value},
+                        (value: number) => {tnFx.feedback.value = value},
+                        (value: number) => {tnFx.delayTime.value = value},
+                    ]
+                },
                 getParams: function () {
 
                     const tnFx = this.fx
@@ -288,9 +308,9 @@ const addFxList: AddFxType[] = [
                     assertsFeedbackDelay(tnFx)
 
                     return [
-                        {name: 'wet', min: 0, max: 1, value: Number(tnFx.wet.value), setter: (value: number) => {tnFx.wet.value = value}},
-                        {name: 'feedback', min: 0, max: 1, value: Number(tnFx.feedback.value), setter: (value: number) => {tnFx.feedback.value = value}},
-                        {name: 'delayTime', min: 0, max: 100, value: Number(tnFx.delayTime.value), setter: (value: number) => {tnFx.delayTime.value = value}},
+                        { name: 'wet', min: 0, max: 1, value: Number(tnFx.wet.value) },
+                        { name: 'feedback', min: 0, max: 1, value: Number(tnFx.feedback.value) },
+                        { name: 'delayTime', min: 0, max: 100, value: Number(tnFx.delayTime.value) },
                     ]
                 },
                 fx: new FeedbackDelay({
@@ -300,11 +320,13 @@ const addFxList: AddFxType[] = [
                 })
             }
         },
-        createStateFx: (id: string) => {
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsFeedbackDelay(tnFx.fx)
 
             return {
-                id,
-                name: 'FeedbackDelay'
+                id: tnFx.id,
+                name: 'FeedbackDelay',
             }
         },
     },

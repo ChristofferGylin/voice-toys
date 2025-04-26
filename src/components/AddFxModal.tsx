@@ -36,11 +36,9 @@ const AddFxModal = ({index, id, closeModal}: {index: number, id?: string, closeM
                 <div className="flex flex-col overflow-x-scroll">
                     {addFxList.map((fx, listIndex) => {
                         return <AddFxItem key={`${fx.name}#${listIndex}`} fx={fx} callback={(toneFx, stateFx) => {
-                            disconnectFx()
                             setFx({
                                 stFx: stateFx, tnFx: toneFx, index: index, oldId: id,
                             })
-                            connectFx()
                             closeModal()
                         }} />
                     })}
