@@ -11,7 +11,7 @@ const FxItem = ({fx, index}: {fx: StateFx | null, index: number}) => {
     if (!fx) {
         return (
             <>
-                <div className={style}>
+                <div className={`${style} border-dashed`}>
                     <AddFxThumb index={index} />
                 </div>
                 <FaArrowRight className={arrowStyle}/>

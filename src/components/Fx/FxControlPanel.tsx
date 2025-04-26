@@ -24,22 +24,21 @@ const FxControlPanel = ({ stateFx, setters, params, closeModal }: { stateFx: Sta
     
     return (
         <div className="fixed top-0 left-0 flex justify-center items-center w-screen h-screen bg-slate-950/10 backdrop-blur-xs">
-            <div ref={modalRef} className="flex flex-col gap-2 rounded bg-slate-600 shadow-lg shadow-slate-950/50 p-8 text-slate-200">
-            <div>
-                <h1 className="text-xl">{stateFx.name}</h1>
-            </div>
+            <div ref={modalRef} className="flex flex-col items-center gap-2 rounded bg-slate-600 shadow-lg shadow-slate-950/50 p-8 text-slate-200">
+            <h1 className="text-2xl">{stateFx.name}</h1>
             <div className="flex flex-col gap-4">
                 {params.map((param, index) => (
                     <div className="flex flex-col items-center">
-                        <h2>{param.name}</h2>
+                        <h2 className="text-lg">{param.name}</h2>
                         <TurnableKnob
-                        key={`${param.name}#${stateFx.id}`}
-                        value={scaleValue({value: param.value, fromScale: {start: param.min, end: param.max}, toScale: {start: 0, end: 1}})}
-                        callback={(newValue) => {
-                            const scaledValue = scaleValue({value: newValue, fromScale: {start: 0, end: 1}, toScale: {start: param.min, end: param.max}})
-                            setters[index](scaledValue)
-                        }}  
-                    />
+                            key={`${param.name}#${stateFx.id}`}
+                            value={scaleValue({value: param.value, fromScale: {start: param.min, end: param.max}, toScale: {start: 0, end: 1}})}
+                            callback={(newValue) => {
+                                const scaledValue = scaleValue({value: newValue, fromScale: {start: 0, end: 1}, toScale: {start: param.min, end: param.max}})
+                                setters[index](scaledValue)
+                            }}  
+                        />
+                        <p className="text-sm">{param.value}</p>
                     </div>
                     
                 ))}
