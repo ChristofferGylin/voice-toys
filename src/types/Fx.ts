@@ -48,7 +48,6 @@ export type ToneFx = {
         EQ3
     );
     getParams: () => StateFxParam[];
-    setParam: (param: string, value: number | string) => void;
 }
 
 export type StateFxParam = {

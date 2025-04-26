@@ -1,1 +1,50 @@
 @import "tailwindcss";
+@tailwind utilities;
+
+@layer utilities {
+    @variants responsive {
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+  
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    }
+    body {
+      @apply bg-slate-900 font-poppins tracking-wide text-slate-300;
+    }
+    a {
+      @apply text-blue-600 visited:text-purple-600;
+    }
+    h1 {
+      @apply text-4xl;
+    }
+    h2 {
+      @apply text-3xl;
+    }
+    h3 {
+      @apply text-xl;
+    }
+    h1,
+    h2,
+    h3,
+    p {
+      @apply tracking-wide;
+    }
+  
+    .turnable-knob {
+      transform-origin: 50% 50%;
+      transform-box: fill-box;
+      -webkit-transform-box: fill-box;
+    }
+    .fx-item {
+        @apply flex justify-center items-center aspect-square h-full border rounded-lg text-3xl overflow-hidden
+    }
+  }
+
+  .fx-item {
+    @apply flex justify-center items-center aspect-square h-full border rounded-lg text-3xl overflow-hidden
+}
+

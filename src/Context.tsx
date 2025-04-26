@@ -1,7 +1,6 @@
 import { createContext, ReactNode, useRef, Ref, useContext, useState, useEffect } from "react"
 import { StateFx, ToneFx } from "./types/Fx"
 import { Gain, getContext, Player, start, UserMedia } from "tone"
-import { v4 as uuidv4 } from "uuid"
 
 type ControlSettingsType = {
     isLooping: boolean;
@@ -315,12 +314,23 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
         })
     }
 
-    const toneFxSetter = (oldFxId: string, fx: ToneFx) => {
+    const toneFxSetter = (fx: ToneFx, newFxId: string, oldFxId: string | undefined) => {
 
-        toneFx.current[oldFxId].fx.dispose()
-        delete toneFx.current[oldFxId]
+        if (oldFxId) {
+            toneFx.current[oldFxId].fx.dispose()
+            delete toneFx.current[oldFxId]
+        }
 
-        toneFx.current[uuidv4()] = fx
+        toneFx.current[newFxId] = fx
+    }
+
+    const setFx = ({stFx, tnFx, index, oldId}: {stFx: StateFx, tnFx: ToneFx, index: number, oldId: string | undefined}) => {
+        setStateFx((oldState) => {
+            const newState = [...oldState]
+            newState[index] = stFx
+
+            return newState
+        })
     }
 
     const disconnectFx = () => {

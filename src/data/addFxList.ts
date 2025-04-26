@@ -10,12 +10,14 @@ const addFxList: AddFxType[] = [
             
             return {
                 id: uuidv4(),
-                getParams: () => {
-                    return []
-                },
-                setParam: (param, value) => {
-                    console.log(param)
-                    console.log(value)
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsAutoFilter(tnFx)
+                    return [
+                        {name: 'depth', min: 0, max: 1, value: Number(tnFx.depth.value), setter: (value: number) => {tnFx.set({depth: value})}},
+                    ]
                 },
                 fx: new AutoFilter({
                     depth: 0.5,
@@ -279,12 +281,17 @@ const addFxList: AddFxType[] = [
         createToneFx: () => {
             return {
                 id: uuidv4(),
-                getParams: () => {
-                    return []
-                },
-                setParam: (param, value) => {
-                    console.log(param)
-                    console.log(value)
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsFeedbackDelay(tnFx)
+
+                    return [
+                        {name: 'wet', min: 0, max: 1, value: Number(tnFx.wet.value), setter: (value: number) => {tnFx.wet.value = value}},
+                        {name: 'feedback', min: 0, max: 1, value: Number(tnFx.feedback.value), setter: (value: number) => {tnFx.feedback.value = value}},
+                        {name: 'delayTime', min: 0, max: 100, value: Number(tnFx.delayTime.value), setter: (value: number) => {tnFx.delayTime.value = value}},
+                    ]
                 },
                 fx: new FeedbackDelay({
                     feedback: 0.4,
@@ -297,16 +304,8 @@ const addFxList: AddFxType[] = [
 
             return {
                 id,
-                name: 'AutoFilter'
+                name: 'FeedbackDelay'
             }
-            
-            // return (
-            //     {name: 'FeedbackDelay',
-            //         params: [
-            //         {name: 'wet', min: 0, max: 1, value: 1, setter: (value: number) => {fx.wet.value = value}},
-            //         {name: 'feedback', min: 0, max: 1, value: 0.4, setter: (value: number) => {fx.feedback.value = value}},
-            //         {name: 'delayTime', min: 0, max: 100, value: 100, setter: (value: number) => {fx.delayTime.value = value}},
-            //     ]})
         },
     },
     // {
