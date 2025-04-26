@@ -6,7 +6,7 @@ import { IoCloseCircleOutline } from "react-icons/io5"
 
 const AddFxModal = ({index, id, closeModal}: {index: number, id?: string, closeModal: () => void} ) => {
 
-    const { toneFxSetter, stateFxSetter, connectFx, disconnectFx, stateFx } = useFxContext()
+    const { connectFx, disconnectFx, setFx } = useFxContext()
 
     const modalRef = useRef<HTMLDivElement | null>(null)
 
@@ -37,8 +37,9 @@ const AddFxModal = ({index, id, closeModal}: {index: number, id?: string, closeM
                     {addFxList.map((fx, listIndex) => {
                         return <AddFxItem key={`${fx.name}#${listIndex}`} fx={fx} callback={(toneFx, stateFx) => {
                             disconnectFx()
-                            toneFxSetter(id, toneFx)
-                            stateFxSetter(index, stateFx)
+                            setFx({
+                                stFx: stateFx, tnFx: toneFx, index: index, oldId: id,
+                            })
                             connectFx()
                             closeModal()
                         }} />

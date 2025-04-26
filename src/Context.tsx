@@ -27,12 +27,11 @@ type ContextType = {
     onStartPlay: () => void;
     onStopPlay: () => void;
     stateFx: (StateFx | null)[]
-    stateFxSetter: (inded: number, fx: StateFx | null) => void;
     onToggleLoop: () => void;
     onToggleMuteInput: () => void;
     onToggleMuteOutput: () => void;
     toneFx: Ref<Record<string, ToneFx>>;
-    toneFxSetter: (oldFxId: string, nexFxId: string, fx: ToneFx) => void;
+    setFx: ({stFx, tnFx, index, oldId}: {stFx: StateFx, tnFx: ToneFx, index: number, oldId: string | undefined}) => void;
 }
 
 const FxContext = createContext<ContextType | undefined>(undefined)
@@ -305,26 +304,15 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
         }
     }
 
-    const stateFxSetter = (index: number, fx: StateFx | null) => {
-        setStateFx((oldState) => {
-            const newState = [...oldState]
-            newState[index] = fx
-
-            return newState
-        })
-    }
-
-    const toneFxSetter = (fx: ToneFx, newFxId: string, oldFxId: string | undefined) => {
-
-        if (oldFxId) {
-            toneFx.current[oldFxId].fx.dispose()
-            delete toneFx.current[oldFxId]
+    const setFx = ({stFx, tnFx, index, oldId}: {stFx: StateFx, tnFx: ToneFx, index: number, oldId: string | undefined}) => {
+        
+        if (oldId) {
+            toneFx.current[oldId].fx.dispose()
+            delete toneFx.current[oldId]
         }
 
-        toneFx.current[newFxId] = fx
-    }
+        toneFx.current[tnFx.id] = tnFx
 
-    const setFx = ({stFx, tnFx, index, oldId}: {stFx: StateFx, tnFx: ToneFx, index: number, oldId: string | undefined}) => {
         setStateFx((oldState) => {
             const newState = [...oldState]
             newState[index] = stFx
@@ -422,14 +410,13 @@ export const FxContextProvider = ({ children }: { children: ReactNode }) => {
             onStartRecord,
             onStopRecord,
             stateFx,
-            stateFxSetter,
             masterVolumeSetter,
             onExport,
             onToggleLoop,
             onToggleMuteInput,
             onToggleMuteOutput,
             toneFx,
-            toneFxSetter
+            setFx,
         }}>
             {children}
         </FxContext.Provider>

@@ -10,7 +10,7 @@ const FxControlPanel = ({ stateFx }: { stateFx: StateFx }) => {
                 <h1 className="text-xl">{stateFx.name}</h1>
             </div>
             <div className="flex flex-col gap-4">
-                {stateFx.params.map((param) => (
+                {/* {stateFx.params.map((param) => (
                     <div className="flex flex-col items-center">
                         <h2>{param.name}</h2>
                         <TurnableKnob
@@ -23,7 +23,7 @@ const FxControlPanel = ({ stateFx }: { stateFx: StateFx }) => {
                     />
                     </div>
                     
-                ))}
+                ))} */}
                 
             </div>
         </div>
