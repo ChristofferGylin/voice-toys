@@ -97,7 +97,7 @@ const addFxList: AddFxType[] = [
     //         sensitivity: -30
     //     })),
     //     createStateFx: () => ({
-    //         name: 'AutoPanner',
+    //         name: 'AutoWah',
     //         settings: {
     //             Q: 0.5,
     //             gain: 1,
@@ -347,21 +347,18 @@ const addFxList: AddFxType[] = [
     //             detune: 0,
     //             frequency: 400,
     //             gain: 1,
-    //             type: 'highpass',
     //         },
     //         minValues: {
     //             Q: 0,
     //             detune: 0,
     //             frequency: 0,
     //             gain: 1,
-    //             type: 'lowpass',
     //         },
     //         maxValues: {
     //             Q: 1,
     //             detune: 1,
     //             frequency: 20000,
     //             gain: 1,
-    //             type: 'highpass',
     //         },
     //     }),
     // },

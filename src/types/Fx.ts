@@ -3,7 +3,13 @@ import { AutoFilter, AutoPanner, AutoWah, BitCrusher, Chebyshev, Chorus, Compres
 
 export function assertsAutoFilter (fxInstance: any): asserts fxInstance is AutoFilter {
     if (fxInstance.name !== 'AutoFilter') {
-        throw new TypeError('Fx is not an instance of Autofilter')
+        throw new TypeError('Fx is not an instance of AutoFilter')
+    }
+}
+
+export function assertsAutoPanner (fxInstance: any): asserts fxInstance is AutoPanner {
+    if (fxInstance.name !== 'AutoPanner') {
+        throw new TypeError('Fx is not an instance of AutoPanner')
     }
 }
 
