@@ -17,8 +17,8 @@ const addFxList: AddFxType[] = [
                     assertsAutoFilter(tnFx)
                     return [
                         (value: number) => {tnFx.set({depth: value})},
-                        (value: number) => {tnFx.frequency.value = value},
-                        (value: number) => {tnFx.wet.value = value},
+                        (value: number) => {tnFx.set({frequency: value})},
+                        (value: number) => {tnFx.set({wet: value})},
                         (value: number) => {tnFx.set({baseFrequency: value})},
                         (value: number) => {tnFx.set({octaves: value})}
                     ]
@@ -26,22 +26,23 @@ const addFxList: AddFxType[] = [
                 getParams: function () {
 
                     const tnFx = this.fx
-
                     assertsAutoFilter(tnFx)
+                    const {depth, frequency, wet, baseFrequency, octaves} = tnFx.get()
+
                     return [
-                        { name: 'depth', min: 0, max: 1, value: Number(tnFx.depth.value) },
-                        { name: 'frequency', min: 0, max: 20000, value: Number(tnFx.frequency.value) },
-                        { name: 'wet', min: 0, max: 1, value: Number(tnFx.wet.value) },
-                        { name: 'baseFrequency', min: 0, max: 20000, value: Number(tnFx.baseFrequency) },
-                        { name: 'octaves', min: 1, max: 8, value: Number(tnFx.octaves) },
+                        { name: 'depth', min: 0, max: 1, value: Number(depth) },
+                        { name: 'frequency', min: 0.1, max: 10, value: Number(frequency) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                        { name: 'baseFrequency', min: 20, max: 5000, value: Number(baseFrequency) },
+                        { name: 'octaves', min: 0.1, max: 4, value: Number(octaves) },
                     ]
                 },
                 fx: new AutoFilter({
-                    depth: 0.5,
-                    frequency: 4,
+                    depth: 1,
+                    frequency: 2,
                     wet: 1,
-                    baseFrequency: 1,
-                    octaves: 3,
+                    baseFrequency: 400,
+                    octaves: 2,
                 }).start()
             }
         },
