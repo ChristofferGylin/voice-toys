@@ -56,39 +56,6 @@ const addFxList: AddFxType[] = [
         },
     },
     // {
-    //     name: 'AutoPanner',
-    //     description: 'AutoPanner is a Panner with an LFO connected to the pan amount.',
-    //     createToneFx: () => (new AutoPanner({
-    //         depth: 0.5,
-    //         frequency: 2,
-    //         wet: 1,
-    //     }).start()),
-    //     createStateFx: () => ({
-    //         name: 'AutoPanner', 
-    //         settings: {
-    //             depth: 0.5,
-    //             frequency: 2,
-    //             wet: 1,
-    //             baseFrequency: 1,
-    //             octaves: 3,
-    //         },
-    //         minValues: {
-    //             depth: 0,
-    //             frequency: 0,
-    //             wet: 0,
-    //             baseFrequency: 0,
-    //             octaves: 1,
-    //         },
-    //         maxValues: {
-    //             depth: 1,
-    //             frequency: 1000,
-    //             wet: 1,
-    //             baseFrequency: 1000,
-    //             octaves: 8,
-    //         },
-    //     }),
-    // },
-    // {
     //     name: 'AutoWah',
     //     description: 'AutoWah connects a Follower to a Filter. The frequency of the filter, follows the input amplitude curve. Inspiration from Tuna.js.',
     //     createToneFx: () => (new AutoWah({
