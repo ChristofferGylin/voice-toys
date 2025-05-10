@@ -7,9 +7,9 @@ export function assertsAutoFilter (fxInstance: any): asserts fxInstance is AutoF
     }
 }
 
-export function assertsAutoPanner (fxInstance: any): asserts fxInstance is AutoPanner {
-    if (fxInstance.name !== 'AutoPanner') {
-        throw new TypeError('Fx is not an instance of AutoPanner')
+export function assertsAutoWah (fxInstance: any): asserts fxInstance is AutoWah {
+    if (fxInstance.name !== 'AutoWah') {
+        throw new TypeError(`Fx is not an instance of AutoWah, Fx name ${fxInstance.name} does not match AutoWah`)
     }
 }
 

@@ -1,5 +1,5 @@
-import { AutoFilter, AutoPanner, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
+import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
+import { assertsAutoFilter, assertsAutoWah, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -55,42 +55,61 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'AutoWah',
-    //     description: 'AutoWah connects a Follower to a Filter. The frequency of the filter, follows the input amplitude curve. Inspiration from Tuna.js.',
-    //     createToneFx: () => (new AutoWah({
-    //         baseFrequency: 50,
-    //         octaves: 6,
-    //         sensitivity: -30
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'AutoWah',
-    //         settings: {
-    //             Q: 0.5,
-    //             gain: 1,
-    //             wet: 1,
-    //             baseFrequency: 50,
-    //             octaves: 6,
-    //             sensitivity: -30
-    //         },
-    //         minValues: {
-    //             Q: 0,
-    //             gain: 0,
-    //             wet: 0,
-    //             baseFrequency: 0,
-    //             octaves: 1,
-    //             sensitivity: -100
-    //         },
-    //         maxValues: {
-    //             Q: 1,
-    //             gain: 1,
-    //             wet: 1,
-    //             baseFrequency: 1000,
-    //             octaves: 8,
-    //             sensitivity: 6
-    //         },
-    //     }),
-    // },
+    {
+        name: 'AutoWah',
+        description: 'AutoWah connects a Follower to a Filter. The frequency of the filter, follows the input amplitude curve. Inspiration from Tuna.js.',
+        createToneFx: () => {
+            
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsAutoWah(tnFx)
+                    return [
+                        (value: number) => {tnFx.set({Q: value})},
+                        (value: number) => {tnFx.set({gain: value})},
+                        (value: number) => {tnFx.set({wet: value})},
+                        (value: number) => {tnFx.set({baseFrequency: value})},
+                        (value: number) => {tnFx.set({octaves: value})},
+                        (value: number) => {tnFx.set({sensitivity: value})}
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsAutoWah(tnFx)
+
+                    const params = tnFx.get()
+
+                    return [
+                        { name: 'Q', min: 0, max: 1, value: Number(params.Q) },
+                        { name: 'gain', min: 0, max: 1, value: Number(params.gain) },
+                        { name: 'wet', min: 0, max: 1, value: Number(params.wet) },
+                        { name: 'baseFrequency', min: 0, max: 20000, value: Number(params.baseFrequency) },
+                        { name: 'octaves', min: 1, max: 8, value: Number(params.octaves) },
+                        { name: 'sensitivity', min: 1, max: 8, value: Number(params.sensitivity) },
+                    ]
+                },
+                fx: new AutoWah({
+                    baseFrequency: 50,
+                    octaves: 6,
+                    sensitivity: -30
+                })
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsAutoWah(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'AutoWah',
+            }
+        },
+    },
     // {
     //     name: 'BitCrusher',
     //     description: 'BitCrusher down-samples the incoming signal to a different bit depth. Lowering the bit depth of the signal creates distortion.',
