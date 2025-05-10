@@ -83,20 +83,22 @@ const addFxList: AddFxType[] = [
 
                     assertsAutoWah(tnFx)
 
-                    const params = tnFx.get()
+                    const {Q, gain, wet, baseFrequency, octaves, sensitivity} = tnFx.get()
 
                     return [
-                        { name: 'Q', min: 0, max: 1, value: Number(params.Q) },
-                        { name: 'gain', min: 0, max: 1, value: Number(params.gain) },
-                        { name: 'wet', min: 0, max: 1, value: Number(params.wet) },
-                        { name: 'baseFrequency', min: 0, max: 20000, value: Number(params.baseFrequency) },
-                        { name: 'octaves', min: 1, max: 8, value: Number(params.octaves) },
-                        { name: 'sensitivity', min: 1, max: 8, value: Number(params.sensitivity) },
+                        { name: 'Q', min: 1, max: 10, value: Number(Q) },
+                        { name: 'gain', min: 0, max: 20, value: Number(gain) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                        { name: 'baseFrequency', min: 50, max: 800, value: Number(baseFrequency) },
+                        { name: 'octaves', min: 1, max: 4, value: Number(octaves) },
+                        { name: 'sensitivity', min: -35, max: -5, value: Number(sensitivity) },
                     ]
                 },
                 fx: new AutoWah({
-                    baseFrequency: 50,
-                    octaves: 6,
+                    Q: 3,
+                    gain: 5,
+                    baseFrequency: 300,
+                    octaves: 2,
                     sensitivity: -30
                 })
             }
