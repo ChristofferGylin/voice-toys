@@ -9,13 +9,19 @@ export function assertsAutoFilter (fxInstance: any): asserts fxInstance is AutoF
 
 export function assertsAutoWah (fxInstance: any): asserts fxInstance is AutoWah {
     if (fxInstance.name !== 'AutoWah') {
-        throw new TypeError(`Fx is not an instance of AutoWah, Fx name ${fxInstance.name} does not match AutoWah`)
+        throw new TypeError(`Fx is not an instance of AutoWah`)
     }
 }
 
 export function assertsFeedbackDelay (fxInstance: any): asserts fxInstance is FeedbackDelay {
     if (fxInstance.name !== 'FeedbackDelay') {
         throw new TypeError('Fx is not an instance of FeedbackDelay')
+    }
+}
+
+export function assertsBitCrusher (fxInstance: any): asserts fxInstance is BitCrusher {
+    if (fxInstance.name !== 'BitCrusher') {
+        throw new TypeError('Fx is not an instance of BitCrusher')
     }
 }
 

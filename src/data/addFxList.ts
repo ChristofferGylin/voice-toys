@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -113,26 +113,49 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'BitCrusher',
-    //     description: 'BitCrusher down-samples the incoming signal to a different bit depth. Lowering the bit depth of the signal creates distortion.',
-    //     createToneFx: () => (new BitCrusher(4)),
-    //     createStateFx: () => ({
-    //         name: 'BitCrusher',
-    //         settings: {
-    //             bits: 4,
-    //             wet: 0.5,
-    //         },
-    //         minValues: {
-    //             bits: 0,
-    //             wet: 0,
-    //         },
-    //         maxValues: {
-    //             bits: 32,
-    //             wet: 1,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'BitCrusher',
+        description: 'BitCrusher down-samples the incoming signal to a different bit depth. Lowering the bit depth of the signal creates distortion.',
+        createToneFx: () => {
+            
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsBitCrusher(tnFx)
+                    return [
+                        (value: number) => {tnFx.set({bits: value})},
+                        (value: number) => {tnFx.set({wet: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsBitCrusher(tnFx)
+
+                    const {bits, wet} = tnFx.get()
+
+                    return [
+                        { name: 'bits', min: 4, max: 12, value: Number(bits) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                    ]
+                },
+                fx: new BitCrusher(5).set({wet: 0.5})
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsBitCrusher(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'BitCrusher',
+            }
+        },
+    },
     // {
     //     name: 'Chebyshev',
     //     description: 'Chebyshev is a waveshaper which is good for making different types of distortion sounds. Note that odd orders sound very different from even ones, and order = 1 is no change.',
