@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -156,26 +156,49 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'Chebyshev',
-    //     description: 'Chebyshev is a waveshaper which is good for making different types of distortion sounds. Note that odd orders sound very different from even ones, and order = 1 is no change.',
-    //     createToneFx: () => (new Chebyshev(50)),
-    //     createStateFx: () => ({
-    //         name: 'Chebyshev',
-    //         settings: {
-    //             order: 50,
-    //             wet: 0.5
-    //         },
-    //         minValues: {
-    //             order: 1,
-    //             wet: 0
-    //         },
-    //         maxValues: {
-    //             order: 100,
-    //             wet: 1
-    //         },
-    //     }),
-    // },
+    {
+        name: 'Chebyshev',
+        description: 'Chebyshev is a waveshaper which is good for making different types of distortion sounds. Note that odd orders sound very different from even ones, and order = 1 is no change.',
+        createToneFx: () => {
+            
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsChebyshev(tnFx)
+                    return [
+                        (value: number) => { tnFx.set({ order: Math.max(1, Math.round(value)) }) },
+                        (value: number) => {tnFx.set({wet: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsChebyshev(tnFx)
+
+                    const {order, wet} = tnFx.get()
+
+                    return [
+                        { name: 'order', min: 1, max: 50, value: Number(order) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                    ]
+                },
+                fx: new Chebyshev(50),
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsChebyshev(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'Chebyshev',
+            }
+        },
+    },
     // {
     //     name: 'Chorus',
     //     description: 'Chorus is a stereo chorus effect composed of a left and right delay with an LFO applied to the delayTime of each channel. When feedback is set to a value larger than 0, you also get Flanger-type effects. Inspiration from Tuna.js.',

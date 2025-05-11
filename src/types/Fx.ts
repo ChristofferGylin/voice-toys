@@ -25,6 +25,12 @@ export function assertsBitCrusher (fxInstance: any): asserts fxInstance is BitCr
     }
 }
 
+export function assertsChebyshev (fxInstance: any): asserts fxInstance is Chebyshev {
+    if (fxInstance.name !== 'Chebyshev') {
+        throw new TypeError('Fx is not an instance of Chebyshev')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;
