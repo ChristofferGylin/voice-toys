@@ -43,6 +43,12 @@ export function assertsCompressor (fxInstance: any): asserts fxInstance is Compr
     }
 }
 
+export function assertsDistortion (fxInstance: any): asserts fxInstance is Distortion {
+    if (fxInstance.name !== 'Distortion') {
+        throw new TypeError('Fx is not an instance of Distortion')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;

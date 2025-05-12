@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -309,26 +309,52 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'Distortion',
-    //     description: 'A simple distortion effect using Tone.WaveShaper.',
-    //     createToneFx: () => (new Distortion({wet: 0.5, distortion: 0.8})),
-    //     createStateFx: () => ({
-    //         name: 'Distortion',
-    //         settings: {
-    //             wet: 0.5,
-    //             distortion: 0.8,
-    //         },
-    //         minValues: {
-    //             wet: 0,
-    //             distortion: 0,
-    //         },
-    //         maxValues: {
-    //             wet: 1,
-    //             distortion: 1,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'Distortion',
+        description: 'A simple distortion effect using Tone.WaveShaper.',
+        createToneFx: () => {
+            
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsDistortion(tnFx)
+                    return [
+                        (value: number) => {tnFx.set({distortion: value})},
+                        (value: number) => {tnFx.set({wet: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsDistortion(tnFx)
+
+                    const {distortion, wet} = tnFx.get()
+
+                    return [
+                        { name: 'distortion', min: 0, max: 1, value: Number(distortion) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                    ]
+                },
+                fx: new Distortion({
+                    distortion: 0.15,
+                    wet: 1,   
+                  }),
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsDistortion(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'Distortion',
+            }
+        },
+    },
     // {
     //     name: 'EQ3',
     //     description: 'EQ3 provides 3 equalizer bins: Low/Mid/High.',
