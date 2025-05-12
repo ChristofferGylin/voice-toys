@@ -423,9 +423,9 @@ const addFxList: AddFxType[] = [
                     assertsFeedbackDelay(tnFx)
 
                     return [
-                        (value: number) => {tnFx.wet.value = value},
-                        (value: number) => {tnFx.feedback.value = value},
-                        (value: number) => {tnFx.delayTime.value = value},
+                        (value: number) => {tnFx.set({wet: value})},
+                        (value: number) => {tnFx.set({feedback: value})},
+                        (value: number) => {tnFx.set({delayTime: value})},
                     ]
                 },
                 getParams: function () {
@@ -434,16 +434,18 @@ const addFxList: AddFxType[] = [
 
                     assertsFeedbackDelay(tnFx)
 
+                    const {wet, feedback, delayTime} = tnFx.get()
+
                     return [
-                        { name: 'wet', min: 0, max: 1, value: Number(tnFx.wet.value) },
-                        { name: 'feedback', min: 0, max: 1, value: Number(tnFx.feedback.value) },
-                        { name: 'delayTime', min: 0, max: 100, value: Number(tnFx.delayTime.value) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                        { name: 'feedback', min: 0, max: 0.9, value: Number(feedback) },
+                        { name: 'delayTime', min: 0.02, max: 1, value: Number(delayTime) },
                     ]
                 },
                 fx: new FeedbackDelay({
-                    feedback: 0.4,
+                    feedback: 0.3,
                     wet: 0.5,
-                    delayTime: 100,
+                    delayTime: 0.25,
                 })
             }
         },
