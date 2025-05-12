@@ -49,6 +49,12 @@ export function assertsDistortion (fxInstance: any): asserts fxInstance is Disto
     }
 }
 
+export function assertsEQ3 (fxInstance: any): asserts fxInstance is EQ3 {
+    if (fxInstance.name !== 'EQ3') {
+        throw new TypeError('Fx is not an instance of EQ3')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;

@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -355,41 +355,61 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'EQ3',
-    //     description: 'EQ3 provides 3 equalizer bins: Low/Mid/High.',
-    //     createToneFx: () => (new EQ3({
-    //         high: 0,
-    //         low: 0,
-    //         highFrequency: 600,
-    //         lowFrequency: 100,
-    //         mid: 0,
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'EQ3',
-    //         settings: {
-    //             high: 0,
-    //             low: 0,
-    //             highFrequency: 600,
-    //             lowFrequency: 100,
-    //             mid: 0,
-    //         },
-    //         minValues: {
-    //             high: -60,
-    //             low: -60,
-    //             highFrequency: 0,
-    //             lowFrequency: 0,
-    //             mid: -60,
-    //         },
-    //         maxValues: {
-    //             high: 6,
-    //             low: 6,
-    //             highFrequency: 20000,
-    //             lowFrequency: 20000,
-    //             mid: 6,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'EQ3',
+        description: 'EQ3 provides 3 equalizer bins: Low/Mid/High.',
+        createToneFx: () => {
+            
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsEQ3(tnFx)
+                    return [
+                        (value: number) => {tnFx.set({low: value})},
+                        (value: number) => {tnFx.set({mid: value})},
+                        (value: number) => {tnFx.set({high: value})},
+                        (value: number) => {tnFx.set({lowFrequency: value})},
+                        (value: number) => {tnFx.set({highFrequency: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsEQ3(tnFx)
+
+                    const {low, mid, high, lowFrequency, highFrequency} = tnFx.get()
+
+                    return [
+                        { name: 'low', min: -15, max: 6, value: Number(low) },
+                        { name: 'mid', min: -12, max: 6, value: Number(mid) },
+                        { name: 'high', min: -12, max: 6, value: Number(high) },
+                        { name: 'lowFrequency', min: 60, max: 500, value: Number(lowFrequency) },
+                        { name: 'highFrequency', min: 2000, max: 8000, value: Number(highFrequency) },
+                    ]
+                },
+                fx: new EQ3({
+                    low: 0,
+                    mid: 0,
+                    high: 0,
+                    lowFrequency: 120,
+                    highFrequency: 4000 
+                  }),
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsEQ3(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'EQ3',
+            }
+        },
+    },
     {
         name: 'FeedbackDelay',
         description: 'FeedbackDelay is a DelayNode in which part of output signal is fed back into the delay.',
