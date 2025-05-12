@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -216,7 +216,7 @@ const addFxList: AddFxType[] = [
                         (value: number) => {tnFx.set({wet: value})},
                         (value: number) => {tnFx.set({delayTime: value})},
                         (value: number) => {tnFx.set({depth: value})},
-                        (value: number) => {tnFx.spread = value},
+                        (value: number) => {tnFx.set({spread: value})},
                     ]
                 },
                 getParams: function () {
@@ -254,41 +254,61 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'Compressor',
-    //     description: 'Compressor is a thin wrapper around the Web Audio DynamicsCompressorNode. Compression reduces the volume of loud sounds or amplifies quiet sounds by narrowing or "compressing" an audio signals dynamic range.',
-    //     createToneFx: () => (new Compressor({
-    //         attack: 0.1,
-    //         threshold: -30,
-    //         knee: 1,
-    //         ratio: 3,
-    //         release: 0.5,
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'Compressor',
-    //         settings: {
-    //             attack: 0.1,
-    //             threshold: -30,
-    //             knee: 1,
-    //             ratio: 3,
-    //             release: 0.5,
-    //         },
-    //         minValues: {
-    //             attack: 0,
-    //             threshold: -60,
-    //             knee: 0,
-    //             ratio: 0,
-    //             release: 0,
-    //         },
-    //         maxValues: {
-    //             attack: 1,
-    //             threshold: 6,
-    //             knee: 1,
-    //             ratio: 10,
-    //             release: 10,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'Compressor',
+        description: 'Compressor is a thin wrapper around the Web Audio DynamicsCompressorNode. Compression reduces the volume of loud sounds or amplifies quiet sounds by narrowing or "compressing" an audio signals dynamic range.',
+        createToneFx: () => {
+            
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsCompressor(tnFx)
+                    return [
+                        (value: number) => {tnFx.set({threshold: value})},
+                        (value: number) => {tnFx.set({ratio: value})},
+                        (value: number) => {tnFx.set({attack: value})},
+                        (value: number) => {tnFx.set({release: value})},
+                        (value: number) => {tnFx.set({knee: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsCompressor(tnFx)
+
+                    const {threshold, ratio, attack, release, knee} = tnFx.get()
+
+                    return [
+                        { name: 'threshold', min: -60, max: -20, value: Number(threshold) },
+                        { name: 'ratio', min: 2, max: 6, value: Number(ratio) },
+                        { name: 'attack', min: 0.003, max: 0.03, value: Number(attack) },
+                        { name: 'release', min: 0.1, max: 0.5, value: Number(release) },
+                        { name: 'knee', min: 6, max: 12, value: Number(knee) },
+                    ]
+                },
+                fx: new Compressor({
+                    threshold: -30,
+                    ratio: 3,
+                    attack: 0.01,
+                    release: 0.25,
+                    knee: 10   
+                  }),
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsCompressor(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'Compressor',
+            }
+        },
+    },
     // {
     //     name: 'Distortion',
     //     description: 'A simple distortion effect using Tone.WaveShaper.',

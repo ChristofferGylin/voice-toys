@@ -37,6 +37,12 @@ export function assertsChorus (fxInstance: any): asserts fxInstance is Chorus {
     }
 }
 
+export function assertsCompressor (fxInstance: any): asserts fxInstance is Compressor {
+    if (fxInstance.name !== 'Compressor') {
+        throw new TypeError('Fx is not an instance of Compressor')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;
