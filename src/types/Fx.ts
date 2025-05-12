@@ -31,6 +31,12 @@ export function assertsChebyshev (fxInstance: any): asserts fxInstance is Chebys
     }
 }
 
+export function assertsChorus (fxInstance: any): asserts fxInstance is Chorus {
+    if (fxInstance.name !== 'Chorus') {
+        throw new TypeError('Fx is not an instance of Chorus')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;

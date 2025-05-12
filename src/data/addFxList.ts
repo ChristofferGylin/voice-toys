@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -199,35 +199,61 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'Chorus',
-    //     description: 'Chorus is a stereo chorus effect composed of a left and right delay with an LFO applied to the delayTime of each channel. When feedback is set to a value larger than 0, you also get Flanger-type effects. Inspiration from Tuna.js.',
-    //     createToneFx: () => (new Chorus(4, 2.5, 0.5).start()),
-    //     createStateFx: () => ({
-    //         name: 'Chorus',
-    //         settings: {
-    //             frequency: 4,
-    //             delayTime: 2.5,
-    //             depth: 0.5,
-    //             wet: 1,
-    //             feedback: 0,
-    //         },
-    //         minValues: {
-    //             frequency: 0,
-    //             delayTime: 0,
-    //             depth: 0,
-    //             wet: 0,
-    //             feedback: 0,
-    //         },
-    //         maxValues: {
-    //             frequency: 20000,
-    //             delayTime: 20,
-    //             depth: 1,
-    //             wet: 1,
-    //             feedback: 1,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'Chorus',
+        description: 'Chorus is a stereo chorus effect composed of a left and right delay with an LFO applied to the delayTime of each channel. When feedback is set to a value larger than 0, you also get Flanger-type effects. Inspiration from Tuna.js.',
+        createToneFx: () => {
+            
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsChorus(tnFx)
+                    return [
+                        (value: number) => {tnFx.set({frequency: value})},
+                        (value: number) => {tnFx.set({wet: value})},
+                        (value: number) => {tnFx.set({delayTime: value})},
+                        (value: number) => {tnFx.set({depth: value})},
+                        (value: number) => {tnFx.spread = value},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsChorus(tnFx)
+
+                    const {frequency, wet, delayTime, depth, spread} = tnFx.get()
+
+                    return [
+                        { name: 'frequency', min: 0.3, max: 5, value: Number(frequency) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                        { name: 'delayTime', min: 4, max: 15, value: Number(delayTime) },
+                        { name: 'depth', min: 0, max: 1, value: Number(depth) },
+                        { name: 'spread', min: 0, max: 180, value: Number(spread) },
+                    ]
+                },
+                fx: new Chorus({
+                    frequency: 1.5,
+                    delayTime: 10,
+                    depth: 0.5,
+                    wet: 0.4,
+                    spread: 90,
+                  }).start(),
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsChorus(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'Chorus',
+            }
+        },
+    },
     // {
     //     name: 'Compressor',
     //     description: 'Compressor is a thin wrapper around the Web Audio DynamicsCompressorNode. Compression reduces the volume of loud sounds or amplifies quiet sounds by narrowing or "compressing" an audio signals dynamic range.',
