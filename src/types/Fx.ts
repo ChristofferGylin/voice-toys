@@ -55,6 +55,12 @@ export function assertsEQ3 (fxInstance: any): asserts fxInstance is EQ3 {
     }
 }
 
+export function assertsFilter (fxInstance: any): asserts fxInstance is Filter {
+    if (fxInstance.name !== 'Filter') {
+        throw new TypeError('Fx is not an instance of Filter')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;

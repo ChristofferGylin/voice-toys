@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -459,38 +459,54 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'Filter',
-    //     description: 'Tone.Filter is a filter which allows for all of the same native methods as the BiquadFilterNode. Tone.Filter has the added ability to set the filter rolloff at -12 (default), -24 and -48.',
-    //     createToneFx: () => (new Filter({
-    //         Q: 0,
-    //         detune: 0,
-    //         frequency: 400,
-    //         gain: 1,
-    //         type: 'highpass',
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'Filter',
-    //         settings: {
-    //             Q: 0,
-    //             detune: 0,
-    //             frequency: 400,
-    //             gain: 1,
-    //         },
-    //         minValues: {
-    //             Q: 0,
-    //             detune: 0,
-    //             frequency: 0,
-    //             gain: 1,
-    //         },
-    //         maxValues: {
-    //             Q: 1,
-    //             detune: 1,
-    //             frequency: 20000,
-    //             gain: 1,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'Filter',
+        description: 'Tone.Filter is a filter which allows for all of the same native methods as the BiquadFilterNode. Tone.Filter has the added ability to set the filter rolloff at -12 (default), -24 and -48.',
+        createToneFx: () => {
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsFilter(tnFx)
+
+                    return [
+                        (value: number) => {tnFx.set({frequency: value})},
+                        (value: number) => {tnFx.set({Q: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsFilter(tnFx)
+
+                    const {frequency, Q} = tnFx.get()
+
+                    return [
+                        { name: 'frequency', min: 0, max: 20000, value: Number(frequency) },
+                        { name: 'Q', min: 0, max: 10, value: Number(Q) },
+                    ]
+                },
+                fx: new Filter({
+                    frequency: 1000,
+                    Q: 1,
+                    type: "highpass",
+                    rolloff: -24
+                })
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsFilter(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'Filter',
+            }
+        },
+    },
     // {
     //     name: 'Freeverb',
     //     description: 'Freeverb is a reverb.',
