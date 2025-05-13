@@ -67,6 +67,12 @@ export function assertsFreeverb (fxInstance: any): asserts fxInstance is Freever
     }
 }
 
+export function assertsFrequencyShifter (fxInstance: any): asserts fxInstance is FrequencyShifter {
+    if (fxInstance.name !== 'FrequencyShifter') {
+        throw new TypeError('Fx is not an instance of FrequencyShifter')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;

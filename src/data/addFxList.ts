@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -556,29 +556,52 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'FrequencyShifter',
-    //     description: 'FrequencyShifter can be used to shift all frequencies of a signal by a fixed amount. The amount can be changed at audio rate and the effect is applied in real time. The frequency shifting is implemented with a technique called single side band modulation using a ring modulator. Note: Contrary to pitch shifting, all frequencies are shifted by the same amount, destroying the harmonic relationship between them. This leads to the classic ring modulator timbre distortion. The algorithm will produces some aliasing towards the high end, especially if your source material contains a lot of high frequencies. Unfortunatelly the webaudio API does not support resampling buffers in real time, so it is not possible to fix it properly. Depending on the use case it might be an option to low pass filter your input before frequency shifting it to get ride of the aliasing.',
-    //     createToneFx: () => (new FrequencyShifter({
-    //         wet: 1,
-    //         frequency: 340,
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'FrequencyShifter',
-    //         settings: {
-    //             wet: 1,
-    //             frequency: 340,
-    //         },
-    //         minValues: {
-    //             wet: 0,
-    //             frequency: 0,
-    //         },
-    //         maxValues: {
-    //             wet: 1,
-    //             frequency: 20000,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'FrequencyShifter',
+        description: 'FrequencyShifter can be used to shift all frequencies of a signal by a fixed amount. The amount can be changed at audio rate and the effect is applied in real time. The frequency shifting is implemented with a technique called single side band modulation using a ring modulator. Note: Contrary to pitch shifting, all frequencies are shifted by the same amount, destroying the harmonic relationship between them. This leads to the classic ring modulator timbre distortion. The algorithm will produces some aliasing towards the high end, especially if your source material contains a lot of high frequencies. Unfortunatelly the webaudio API does not support resampling buffers in real time, so it is not possible to fix it properly. Depending on the use case it might be an option to low pass filter your input before frequency shifting it to get ride of the aliasing.',
+        createToneFx: () => {
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsFrequencyShifter(tnFx)
+
+                    return [
+                        (value: number) => {tnFx.set({frequency: value})},
+                        (value: number) => {tnFx.set({wet: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsFrequencyShifter(tnFx)
+
+                    const {frequency, wet} = tnFx.get()
+
+                    return [
+                        { name: 'frequency', min: -1000, max: 1000, value: Number(frequency) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                    ]
+                },
+                fx: new FrequencyShifter({
+                    wet: 0.5,
+                    frequency: 400,
+                })
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsFrequencyShifter(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'FrequencyShifter',
+            }
+        },
+    },
     // {
     //     name: 'Gate',
     //     description: 'Gate only passes a signal through when the incoming signal exceeds a specified threshold. It uses Follower to follow the ampltiude of the incoming signal and compares it to the threshold value using GreaterThan.',
