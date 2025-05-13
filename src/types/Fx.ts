@@ -61,6 +61,12 @@ export function assertsFilter (fxInstance: any): asserts fxInstance is Filter {
     }
 }
 
+export function assertsFreeverb (fxInstance: any): asserts fxInstance is Freeverb {
+    if (fxInstance.name !== 'Freeverb') {
+        throw new TypeError('Fx is not an instance of Freeverb')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;

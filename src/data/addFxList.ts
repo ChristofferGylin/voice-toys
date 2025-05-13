@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -507,33 +507,55 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'Freeverb',
-    //     description: 'Freeverb is a reverb.',
-    //     createToneFx: () => (new Freeverb({
-    //         wet: 0.4,
-    //         roomSize: 0.5,
-    //         dampening: 1000,
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'Freeverb',
-    //         settings: {
-    //             wet: 0.4,
-    //             roomSize: 0.5,
-    //             dampening: 1000,
-    //         },
-    //         minValues: {
-    //             wet: 0,
-    //             roomSize: 0,
-    //             dampening: 0,
-    //         },
-    //         maxValues: {
-    //             wet: 1,
-    //             roomSize: 1,
-    //             dampening: 20000,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'Freeverb',
+        description: 'Freeverb is a reverb.',
+        createToneFx: () => {
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsFreeverb(tnFx)
+
+                    return [
+                        (value: number) => {tnFx.set({roomSize: value})},
+                        (value: number) => {tnFx.set({wet: value})},
+                        (value: number) => {tnFx.set({dampening: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsFreeverb(tnFx)
+
+                    const {roomSize, wet, dampening} = tnFx.get()
+
+                    return [
+                        { name: 'roomSize', min: 0, max: 1, value: Number(roomSize) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                        { name: 'dampening', min: 0, max: 6000, value: Number(dampening) },
+                    ]
+                },
+                fx: new Freeverb({
+                    wet: 0.5,
+                    roomSize: 0.5,
+                    dampening: 2500
+                })
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsFreeverb(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'Freeverb',
+            }
+        },
+    },
     // {
     //     name: 'FrequencyShifter',
     //     description: 'FrequencyShifter can be used to shift all frequencies of a signal by a fixed amount. The amount can be changed at audio rate and the effect is applied in real time. The frequency shifting is implemented with a technique called single side band modulation using a ring modulator. Note: Contrary to pitch shifting, all frequencies are shifted by the same amount, destroying the harmonic relationship between them. This leads to the classic ring modulator timbre distortion. The algorithm will produces some aliasing towards the high end, especially if your source material contains a lot of high frequencies. Unfortunatelly the webaudio API does not support resampling buffers in real time, so it is not possible to fix it properly. Depending on the use case it might be an option to low pass filter your input before frequency shifting it to get ride of the aliasing.',
