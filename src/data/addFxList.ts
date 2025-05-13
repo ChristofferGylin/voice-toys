@@ -587,7 +587,7 @@ const addFxList: AddFxType[] = [
                     ]
                 },
                 fx: new FrequencyShifter({
-                    wet: 0.5,
+                    wet: 1,
                     frequency: 400,
                 })
             }
