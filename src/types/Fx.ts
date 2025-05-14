@@ -73,6 +73,12 @@ export function assertsFrequencyShifter (fxInstance: any): asserts fxInstance is
     }
 }
 
+export function assertsGate (fxInstance: any): asserts fxInstance is Gate {
+    if (fxInstance.name !== 'Gate') {
+        throw new TypeError('Fx is not an instance of Gate')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;

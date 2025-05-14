@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -602,29 +602,52 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'Gate',
-    //     description: 'Gate only passes a signal through when the incoming signal exceeds a specified threshold. It uses Follower to follow the ampltiude of the incoming signal and compares it to the threshold value using GreaterThan.',
-    //     createToneFx: () => (new Gate({
-    //         threshold: -35,
-    //         smoothing: 0.2,
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'Gate',
-    //         settings: {
-    //             threshold: -35,
-    //             smoothing: 0.2,
-    //         },
-    //         minValues: {
-    //             threshold: -60,
-    //             smoothing: 0,
-    //         },
-    //         maxValues: {
-    //             threshold: 6,
-    //             smoothing: 1,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'Gate',
+        description: 'Gate only passes a signal through when the incoming signal exceeds a specified threshold. It uses Follower to follow the ampltiude of the incoming signal and compares it to the threshold value using GreaterThan.',
+        createToneFx: () => {
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsGate(tnFx)
+
+                    return [
+                        (value: number) => {tnFx.set({threshold: value})},
+                        (value: number) => {tnFx.set({smoothing: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsGate(tnFx)
+
+                    const {threshold, smoothing} = tnFx.get()
+
+                    return [
+                        { name: 'threshold', min: -60, max: 0, value: Number(threshold) },
+                        { name: 'smoothing', min: 0.01, max: 0.2, value: Number(smoothing) },
+                    ]
+                },
+                fx: new Gate({
+                    threshold: -35,
+                    smoothing: 0.05,
+                })
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsGate(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'Gate',
+            }
+        },
+    },
     // {
     //     name: 'JCReverb',
     //     description: 'JCReverb is a simple Schroeder Reverberator tuned by John Chowning in 1970. It is made up of three allpass filters and four FeedbackCombFilter. JCReverb is now implemented with an AudioWorkletNode which may result on performance degradation on some platforms.',
