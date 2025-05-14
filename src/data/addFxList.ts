@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -648,29 +648,52 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'JCReverb',
-    //     description: 'JCReverb is a simple Schroeder Reverberator tuned by John Chowning in 1970. It is made up of three allpass filters and four FeedbackCombFilter. JCReverb is now implemented with an AudioWorkletNode which may result on performance degradation on some platforms.',
-    //     createToneFx: () => (new JCReverb({
-    //         wet: 0.4,
-    //         roomSize: 0.5,
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'JCReverb',
-    //         settings: {
-    //             wet: 0.4,
-    //             roomSize: 0.5,
-    //         },
-    //         minValues: {
-    //             wet: 0,
-    //             roomSize: 0,
-    //         },
-    //         maxValues: {
-    //             wet: 1,
-    //             roomSize: 1,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'JCReverb',
+        description: 'JCReverb is a simple Schroeder Reverberator tuned by John Chowning in 1970. It is made up of three allpass filters and four FeedbackCombFilter. JCReverb is now implemented with an AudioWorkletNode which may result on performance degradation on some platforms.',
+        createToneFx: () => {
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsJCReverb(tnFx)
+
+                    return [
+                        (value: number) => {tnFx.set({roomSize: value})},
+                        (value: number) => {tnFx.set({wet: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsJCReverb(tnFx)
+
+                    const {roomSize, wet} = tnFx.get()
+
+                    return [
+                        { name: 'roomSize', min: 0, max: 1, value: Number(roomSize) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                    ]
+                },
+                fx: new JCReverb({
+                    roomSize: 0.3,
+                    wet: 0.5,
+                })
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsJCReverb(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'JCReverb',
+            }
+        },
+    },
     // {
     //     name: 'Limiter',
     //     description: 'Limiter will limit the loudness of an incoming signal. Under the hood its composed of a Compressor with a fast attack and release and max compression ratio.',

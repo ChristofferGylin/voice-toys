@@ -79,6 +79,12 @@ export function assertsGate (fxInstance: any): asserts fxInstance is Gate {
     }
 }
 
+export function assertsJCReverb (fxInstance: any): asserts fxInstance is JCReverb {
+    if (fxInstance.name !== 'JCReverb') {
+        throw new TypeError('Fx is not an instance of JCReverb')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;
