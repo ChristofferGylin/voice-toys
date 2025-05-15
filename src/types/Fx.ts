@@ -91,6 +91,12 @@ export function assertsLimiter (fxInstance: any): asserts fxInstance is Limiter 
     }
 }
 
+export function assertsPhaser (fxInstance: any): asserts fxInstance is Phaser {
+    if (fxInstance.name !== 'Phaser') {
+        throw new TypeError('Fx is not an instance of Phaser')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;

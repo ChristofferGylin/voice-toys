@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, assertsLimiter, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, assertsLimiter, assertsPhaser, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -737,41 +737,64 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'Phaser',
-    //     description: 'Phaser is a phaser effect. Phasers work by changing the phase of different frequency components of an incoming signal.',
-    //     createToneFx: () => (new Phaser({
-    //         Q: 0.5,
-    //         frequency: 15,
-    //         octaves: 5,
-    //         baseFrequency: 1000,
-    //         wet: 0.5,
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'Phaser',
-    //         settings: {
-    //             Q: 0.5,
-    //             frequency: 15,
-    //             octaves: 5,
-    //             baseFrequency: 1000,
-    //             wet: 0.5,
-    //         },
-    //         minValues: {
-    //             Q: 0,
-    //             frequency: 0,
-    //             octaves: 1,
-    //             baseFrequency: 1,
-    //             wet: 0,
-    //         },
-    //         maxValues: {
-    //             Q: 1,
-    //             frequency: 20000,
-    //             octaves: 8,
-    //             baseFrequency: 20000,
-    //             wet: 1,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'Phaser',
+        description: 'Phaser is a phaser effect. Phasers work by changing the phase of different frequency components of an incoming signal.',
+        createToneFx: () => {
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsPhaser(tnFx)
+
+                    return [
+                        (value: number) => {tnFx.set({frequency: value})},
+                        (value: number) => {tnFx.set({wet: value})},
+                        (value: number) => {tnFx.set({octaves: value})},
+                        (value: number) => {tnFx.set({baseFrequency: value})},
+                        (value: number) => {tnFx.set({Q: value})},
+                        (value: number) => {tnFx.set({stages: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsPhaser(tnFx)
+
+                    const {frequency, wet, octaves, baseFrequency, Q, stages} = tnFx.get()
+
+                    return [
+                        { name: 'frequency', min: 0.1, max: 5, value: Number(frequency) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                        { name: 'octaves', min: 1, max: 6, value: Number(octaves) },
+                        { name: 'baseFrequency', min: 100, max: 1000, value: Number(baseFrequency) },
+                        { name: 'Q', min: 0, max: 10, value: Number(Q) },
+                        { name: 'stages', min: 2, max: 20, value: Number(stages) },
+                    ]
+                },
+                fx: new Phaser({
+                    frequency: 0.5,
+                    octaves: 2,
+                    baseFrequency: 500,
+                    Q: 1,
+                    stages: 4,
+                    wet: 0.2
+                })
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsPhaser(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'Phaser',
+            }
+        },
+    },
     // {
     //     name: 'PingPongDelay',
     //     description: 'PingPongDelay is a feedback delay effect where the echo is heard first in one channel and next in the opposite channel. In a stereo system these are the right and left channels. PingPongDelay in more simplified terms is two Tone.FeedbackDelays with independent delay values. Each delay is routed to one channel (left or right), and the channel triggered second will always trigger at the same interval after the first.',
