@@ -85,6 +85,12 @@ export function assertsJCReverb (fxInstance: any): asserts fxInstance is JCRever
     }
 }
 
+export function assertsLimiter (fxInstance: any): asserts fxInstance is Limiter {
+    if (fxInstance.name !== 'Limiter') {
+        throw new TypeError('Fx is not an instance of Limiter')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;

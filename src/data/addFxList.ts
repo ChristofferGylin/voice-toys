@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, assertsLimiter, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -694,25 +694,49 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'Limiter',
-    //     description: 'Limiter will limit the loudness of an incoming signal. Under the hood its composed of a Compressor with a fast attack and release and max compression ratio.',
-    //     createToneFx: () => (new Limiter({
-    //         threshold: -20,
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'Limiter',
-    //         settings: {
-    //             threshold: -20,
-    //         },
-    //         minValues: {
-    //             threshold: -60,
-    //         },
-    //         maxValues: {
-    //             threshold: 6,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'Limiter',
+        description: 'Limiter will limit the loudness of an incoming signal. Under the hood its composed of a Compressor with a fast attack and release and max compression ratio.',
+        createToneFx: () => {
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsLimiter(tnFx)
+
+                    return [
+                        (value: number) => {tnFx.set({threshold: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsLimiter(tnFx)
+
+                    const {threshold} = tnFx.get()
+
+                    return [
+                        { name: 'threshold', min: -60, max: 0, value: Number(threshold) },
+                    ]
+                },
+                fx: new Limiter({
+                    threshold: -6
+                })
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsLimiter(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'Limiter',
+            }
+        },
+    },
     // {
     //     name: 'Phaser',
     //     description: 'Phaser is a phaser effect. Phasers work by changing the phase of different frequency components of an incoming signal.',
