@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, assertsLimiter, assertsPhaser, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, assertsLimiter, assertsPhaser, assertsPingPongDelay, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -795,33 +795,55 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'PingPongDelay',
-    //     description: 'PingPongDelay is a feedback delay effect where the echo is heard first in one channel and next in the opposite channel. In a stereo system these are the right and left channels. PingPongDelay in more simplified terms is two Tone.FeedbackDelays with independent delay values. Each delay is routed to one channel (left or right), and the channel triggered second will always trigger at the same interval after the first.',
-    //     createToneFx: () => (new PingPongDelay({
-    //         feedback: 0.5,
-    //         wet: 0.4,
-    //         delayTime: 60,
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'PingPongDelay',
-    //         settings: {
-    //             feedback: 0.5,
-    //             wet: 0.4,
-    //             delayTime: 60,
-    //         },
-    //         minValues: {
-    //             feedback: 0,
-    //             wet: 0,
-    //             delayTime: 1,
-    //         },
-    //         maxValues: {
-    //             feedback: 1,
-    //             wet: 1,
-    //             delayTime: 10000,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'PingPongDelay',
+        description: 'PingPongDelay is a feedback delay effect where the echo is heard first in one channel and next in the opposite channel. In a stereo system these are the right and left channels. PingPongDelay in more simplified terms is two Tone.FeedbackDelays with independent delay values. Each delay is routed to one channel (left or right), and the channel triggered second will always trigger at the same interval after the first.',
+        createToneFx: () => {
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsPingPongDelay(tnFx)
+
+                    return [
+                        (value: number) => {tnFx.set({delayTime: value})},
+                        (value: number) => {tnFx.set({wet: value})},
+                        (value: number) => {tnFx.set({feedback: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsPingPongDelay(tnFx)
+
+                    const {delayTime, wet, feedback} = tnFx.get()
+
+                    return [
+                        { name: 'delayTime', min: 0.05, max: 1, value: Number(delayTime) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                        { name: 'feedback', min: 0, max: 1, value: Number(feedback) },
+                    ]
+                },
+                fx: new PingPongDelay({
+                    delayTime: 0.2,
+                    feedback: 0.2,
+                    wet: 0.5,
+                })
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsPingPongDelay(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'PingPongDelay',
+            }
+        },
+    },
     // {
     //     name: 'PitchShift',
     //     description: 'PitchShift does near-realtime pitch shifting to the incoming signal. The effect is achieved by speeding up or slowing down the delayTime of a DelayNode using a sawtooth wave.',
