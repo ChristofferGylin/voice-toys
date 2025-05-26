@@ -97,9 +97,9 @@ export function assertsPhaser (fxInstance: any): asserts fxInstance is Phaser {
     }
 }
 
-export function assertsPingPongDelay (fxInstance: any): asserts fxInstance is PingPongDelay {
-    if (fxInstance.name !== 'PingPongDelay') {
-        throw new TypeError('Fx is not an instance of PingPongDelay')
+export function assertsPitchShift (fxInstance: any): asserts fxInstance is PitchShift {
+    if (fxInstance.name !== 'PitchShift') {
+        throw new TypeError('Fx is not an instance of PitchShift')
     }
 }
 

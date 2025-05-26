@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, assertsLimiter, assertsPhaser, assertsPingPongDelay, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, assertsLimiter, assertsPhaser, assertsPitchShift, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -795,37 +795,56 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'PitchShift',
-    //     description: 'PitchShift does near-realtime pitch shifting to the incoming signal. The effect is achieved by speeding up or slowing down the delayTime of a DelayNode using a sawtooth wave.',
-    //     createToneFx: () => (new PitchShift({
-    //         feedback: 0,
-    //         wet: 1,
-    //         delayTime: 0,
-    //         pitch: -3,
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'PitchShift',
-    //         settings: {
-    //             feedback: 0,
-    //             wet: 1,
-    //             delayTime: 0,
-    //             pitch: -3,
-    //         },
-    //         minValues: {
-    //             feedback: 0,
-    //             wet: 0,
-    //             delayTime: 0,
-    //             pitch: -12,
-    //         },
-    //         maxValues: {
-    //             feedback: 1,
-    //             wet: 1,
-    //             delayTime: 10000,
-    //             pitch: 12,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'PitchShift',
+        description: 'PitchShift does near-realtime pitch shifting to the incoming signal. The effect is achieved by speeding up or slowing down the delayTime of a DelayNode using a sawtooth wave.',
+        createToneFx: () => {
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsPitchShift(tnFx)
+
+                    return [
+                        (value: number) => {tnFx.set({pitch: value})},
+                        (value: number) => {tnFx.set({wet: value})},
+                        (value: number) => {tnFx.set({delayTime: value})},
+                        (value: number) => {tnFx.set({feedback: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsPitchShift(tnFx)
+
+                    const {pitch, wet, delayTime, feedback} = tnFx.get()
+
+                    return [
+                        { name: 'pitch', min: -12, max: 12, value: Number(pitch) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                        { name: 'delayTime', min: 0, max: 1, value: Number(delayTime) },
+                        { name: 'feedback', min: 0, max: 1, value: Number(feedback) },
+                    ]
+                },
+                fx: new PitchShift({
+                    pitch: 2,
+                    wet: 1,
+                })
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsPitchShift(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'PitchShift',
+            }
+        },
+    },
     // {
     //     name: 'Reverb',
     //     description: 'Simple convolution created with decaying noise. Generates an Impulse Response Buffer with Tone.Offline then feeds the IR into ConvolverNode.',
