@@ -895,29 +895,6 @@ const addFxList: AddFxType[] = [
         },
     },
     // {
-    //     name: 'StereoWidener',
-    //     description: 'Applies a width factor to the mid/side seperation. 0 is all mid and 1 is all side.',
-    //     createToneFx: () => (new StereoWidener({
-    //         width: 0.5,
-    //         wet: 1,
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'StereoWidener',
-    //         settings: {
-    //             width: 0.5,
-    //             wet: 1,
-    //         },
-    //         minValues: {
-    //             width: 0,
-    //             wet: 0,
-    //         },
-    //         maxValues: {
-    //             width: 1,
-    //             wet: 1,
-    //         },
-    //     }),
-    // },
-    // {
     //     name: 'Tremolo',
     //     description: 'Tremolo modulates the amplitude of an incoming signal using an LFO. The effect is a stereo effect where the modulation phase is inverted in each channel.',
     //     createToneFx: () => (new Tremolo({
