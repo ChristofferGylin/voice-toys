@@ -103,6 +103,12 @@ export function assertsPitchShift (fxInstance: any): asserts fxInstance is Pitch
     }
 }
 
+export function assertsReverb (fxInstance: any): asserts fxInstance is Reverb {
+    if (fxInstance.name !== 'Reverb') {
+        throw new TypeError('Fx is not an instance of Reverb')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;

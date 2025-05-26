@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, assertsLimiter, assertsPhaser, assertsPitchShift, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, assertsLimiter, assertsPhaser, assertsPitchShift, assertsReverb, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -845,29 +845,55 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'Reverb',
-    //     description: 'Simple convolution created with decaying noise. Generates an Impulse Response Buffer with Tone.Offline then feeds the IR into ConvolverNode.',
-    //     createToneFx: () => (new Reverb({
-    //         wet: 0.4,
-    //         decay: 4,
-    //     })),
-    //     createStateFx: () => ({
-    //         name: 'Reverb',
-    //         settings: {
-    //             wet: 0.4,
-    //             decay: 4,
-    //         },
-    //         minValues: {
-    //             wet: 0,
-    //             decay: 0,
-    //         },
-    //         maxValues: {
-    //             wet: 1,
-    //             decay: 10000,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'Reverb',
+        description: 'Simple convolution created with decaying noise. Generates an Impulse Response Buffer with Tone.Offline then feeds the IR into ConvolverNode.',
+        createToneFx: () => {
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsReverb(tnFx)
+
+                    return [
+                        (value: number) => {tnFx.set({decay: value})},
+                        (value: number) => {tnFx.set({wet: value})},
+                        (value: number) => {tnFx.set({preDelay: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsReverb(tnFx)
+
+                    const {decay, wet, preDelay} = tnFx.get()
+
+                    return [
+                        { name: 'decay', min: 1, max: 3, value: Number(decay) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                        { name: 'preDelay', min: 0, max: 0.1, value: Number(preDelay) },
+                    ]
+                },
+                fx: new Reverb({
+                    decay: 1.8,
+                    preDelay: 0.05,
+                    wet: 0.5,
+                })
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsReverb(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'Reverb',
+            }
+        },
+    },
     // {
     //     name: 'StereoWidener',
     //     description: 'Applies a width factor to the mid/side seperation. 0 is all mid and 1 is all side.',
