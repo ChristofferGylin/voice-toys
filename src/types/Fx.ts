@@ -109,6 +109,12 @@ export function assertsReverb (fxInstance: any): asserts fxInstance is Reverb {
     }
 }
 
+export function assertsTremolo (fxInstance: any): asserts fxInstance is Tremolo {
+    if (fxInstance.name !== 'Tremolo') {
+        throw new TypeError('Fx is not an instance of Tremolo')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;

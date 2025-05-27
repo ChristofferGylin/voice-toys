@@ -1,5 +1,5 @@
 import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
-import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, assertsLimiter, assertsPhaser, assertsPitchShift, assertsReverb, ToneFx, type AddFxType } from "../types/Fx";
+import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, assertsLimiter, assertsPhaser, assertsPitchShift, assertsReverb, assertsTremolo, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
 const addFxList: AddFxType[] = [
@@ -894,33 +894,55 @@ const addFxList: AddFxType[] = [
             }
         },
     },
-    // {
-    //     name: 'Tremolo',
-    //     description: 'Tremolo modulates the amplitude of an incoming signal using an LFO. The effect is a stereo effect where the modulation phase is inverted in each channel.',
-    //     createToneFx: () => (new Tremolo({
-    //         frequency: 9,
-    //         wet: 0.75,
-    //         depth: 0.75,
-    //     }).start()),
-    //     createStateFx: () => ({
-    //         name: 'Tremolo',
-    //         settings: {
-    //             frequency: 9,
-    //             wet: 0.75,
-    //             depth: 0.75,
-    //         },
-    //         minValues: {
-    //             frequency: 0,
-    //             wet: 0,
-    //             depth: 0,
-    //         },
-    //         maxValues: {
-    //             frequency: 20000,
-    //             wet: 1,
-    //             depth: 1,
-    //         },
-    //     }),
-    // },
+    {
+        name: 'Tremolo',
+        description: 'Tremolo modulates the amplitude of an incoming signal using an LFO. The effect is a stereo effect where the modulation phase is inverted in each channel.',
+        createToneFx: () => {
+            return {
+                id: uuidv4(),
+                getSetters: function () {
+
+                    const tnFx = this.fx
+
+                    assertsTremolo(tnFx)
+
+                    return [
+                        (value: number) => {tnFx.set({frequency: value})},
+                        (value: number) => {tnFx.set({wet: value})},
+                        (value: number) => {tnFx.set({depth: value})},
+                    ]
+                },
+                getParams: function () {
+
+                    const tnFx = this.fx
+
+                    assertsTremolo(tnFx)
+
+                    const {frequency, wet, depth} = tnFx.get()
+
+                    return [
+                        { name: 'frequency', min: 0.1, max: 20, value: Number(frequency) },
+                        { name: 'wet', min: 0, max: 1, value: Number(wet) },
+                        { name: 'depth', min: 0, max: 1, value: Number(depth) },
+                    ]
+                },
+                fx: new Tremolo({
+                    frequency: 4,
+                    depth: 0.3,
+                    wet: 0.5,
+                }).start()
+            }
+        },
+        createStateFx: (tnFx: ToneFx) => {
+
+            assertsTremolo(tnFx.fx)
+
+            return {
+                id: tnFx.id,
+                name: 'Tremolo',
+            }
+        },
+    },
     // {
     //     name: 'Vibrato',
     //     description: 'A Vibrato effect composed of a Tone.Delay and a Tone.LFO. The LFO modulates the delayTime of the delay, causing the pitch to rise and fall.',
