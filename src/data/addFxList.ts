@@ -1,4 +1,4 @@
-import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PingPongDelay, PitchShift, Reverb, StereoWidener, Tremolo, Vibrato } from "tone";
+import { AutoFilter, AutoWah, BitCrusher, Chebyshev, Chorus, Compressor, Distortion, EQ3, FeedbackDelay, Filter, Freeverb, FrequencyShifter, Gate, JCReverb, Limiter, Phaser, PitchShift, Reverb, Tremolo, Vibrato } from "tone";
 import { assertsAutoFilter, assertsAutoWah, assertsBitCrusher, assertsChebyshev, assertsChorus, assertsCompressor, assertsDistortion, assertsEQ3, assertsFeedbackDelay, assertsFilter, assertsFreeverb, assertsFrequencyShifter, assertsGate, assertsJCReverb, assertsLimiter, assertsPhaser, assertsPitchShift, assertsReverb, assertsTremolo, assertsVibrato, ToneFx, type AddFxType } from "../types/Fx";
 import { v4 as uuidv4 } from "uuid"
 
