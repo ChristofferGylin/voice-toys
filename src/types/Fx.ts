@@ -115,6 +115,12 @@ export function assertsTremolo (fxInstance: any): asserts fxInstance is Tremolo 
     }
 }
 
+export function assertsVibrato (fxInstance: any): asserts fxInstance is Vibrato {
+    if (fxInstance.name !== 'Vibrato') {
+        throw new TypeError('Fx is not an instance of Vibrato')
+    }
+}
+
 export type AddFxType = {
     name: string;
     description: string;
