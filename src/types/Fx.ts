@@ -3,13 +3,121 @@ import { AutoFilter, AutoPanner, AutoWah, BitCrusher, Chebyshev, Chorus, Compres
 
 export function assertsAutoFilter (fxInstance: any): asserts fxInstance is AutoFilter {
     if (fxInstance.name !== 'AutoFilter') {
-        throw new TypeError('Fx is not an instance of Autofilter')
+        throw new TypeError('Fx is not an instance of AutoFilter')
+    }
+}
+
+export function assertsAutoWah (fxInstance: any): asserts fxInstance is AutoWah {
+    if (fxInstance.name !== 'AutoWah') {
+        throw new TypeError(`Fx is not an instance of AutoWah`)
     }
 }
 
 export function assertsFeedbackDelay (fxInstance: any): asserts fxInstance is FeedbackDelay {
     if (fxInstance.name !== 'FeedbackDelay') {
         throw new TypeError('Fx is not an instance of FeedbackDelay')
+    }
+}
+
+export function assertsBitCrusher (fxInstance: any): asserts fxInstance is BitCrusher {
+    if (fxInstance.name !== 'BitCrusher') {
+        throw new TypeError('Fx is not an instance of BitCrusher')
+    }
+}
+
+export function assertsChebyshev (fxInstance: any): asserts fxInstance is Chebyshev {
+    if (fxInstance.name !== 'Chebyshev') {
+        throw new TypeError('Fx is not an instance of Chebyshev')
+    }
+}
+
+export function assertsChorus (fxInstance: any): asserts fxInstance is Chorus {
+    if (fxInstance.name !== 'Chorus') {
+        throw new TypeError('Fx is not an instance of Chorus')
+    }
+}
+
+export function assertsCompressor (fxInstance: any): asserts fxInstance is Compressor {
+    if (fxInstance.name !== 'Compressor') {
+        throw new TypeError('Fx is not an instance of Compressor')
+    }
+}
+
+export function assertsDistortion (fxInstance: any): asserts fxInstance is Distortion {
+    if (fxInstance.name !== 'Distortion') {
+        throw new TypeError('Fx is not an instance of Distortion')
+    }
+}
+
+export function assertsEQ3 (fxInstance: any): asserts fxInstance is EQ3 {
+    if (fxInstance.name !== 'EQ3') {
+        throw new TypeError('Fx is not an instance of EQ3')
+    }
+}
+
+export function assertsFilter (fxInstance: any): asserts fxInstance is Filter {
+    if (fxInstance.name !== 'Filter') {
+        throw new TypeError('Fx is not an instance of Filter')
+    }
+}
+
+export function assertsFreeverb (fxInstance: any): asserts fxInstance is Freeverb {
+    if (fxInstance.name !== 'Freeverb') {
+        throw new TypeError('Fx is not an instance of Freeverb')
+    }
+}
+
+export function assertsFrequencyShifter (fxInstance: any): asserts fxInstance is FrequencyShifter {
+    if (fxInstance.name !== 'FrequencyShifter') {
+        throw new TypeError('Fx is not an instance of FrequencyShifter')
+    }
+}
+
+export function assertsGate (fxInstance: any): asserts fxInstance is Gate {
+    if (fxInstance.name !== 'Gate') {
+        throw new TypeError('Fx is not an instance of Gate')
+    }
+}
+
+export function assertsJCReverb (fxInstance: any): asserts fxInstance is JCReverb {
+    if (fxInstance.name !== 'JCReverb') {
+        throw new TypeError('Fx is not an instance of JCReverb')
+    }
+}
+
+export function assertsLimiter (fxInstance: any): asserts fxInstance is Limiter {
+    if (fxInstance.name !== 'Limiter') {
+        throw new TypeError('Fx is not an instance of Limiter')
+    }
+}
+
+export function assertsPhaser (fxInstance: any): asserts fxInstance is Phaser {
+    if (fxInstance.name !== 'Phaser') {
+        throw new TypeError('Fx is not an instance of Phaser')
+    }
+}
+
+export function assertsPitchShift (fxInstance: any): asserts fxInstance is PitchShift {
+    if (fxInstance.name !== 'PitchShift') {
+        throw new TypeError('Fx is not an instance of PitchShift')
+    }
+}
+
+export function assertsReverb (fxInstance: any): asserts fxInstance is Reverb {
+    if (fxInstance.name !== 'Reverb') {
+        throw new TypeError('Fx is not an instance of Reverb')
+    }
+}
+
+export function assertsTremolo (fxInstance: any): asserts fxInstance is Tremolo {
+    if (fxInstance.name !== 'Tremolo') {
+        throw new TypeError('Fx is not an instance of Tremolo')
+    }
+}
+
+export function assertsVibrato (fxInstance: any): asserts fxInstance is Vibrato {
+    if (fxInstance.name !== 'Vibrato') {
+        throw new TypeError('Fx is not an instance of Vibrato')
     }
 }
 
